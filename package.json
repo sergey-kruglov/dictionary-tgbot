@@ -1,0 +1,27 @@
+{
+  "name": "dictionary-tgbot",
+  "version": "0.0.1",
+  "description": "Telegram bot that helps to remind words",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sergey-kruglov/dictionary-tgbot.git"
+  },
+  "keywords": [
+    "telegram",
+    "tg",
+    "bot",
+    "dictionary",
+    "words",
+    "reminder"
+  ],
+  "author": "Sergey Kruglov",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/sergey-kruglov/dictionary-tgbot/issues"
+  },
+  "homepage": "https://github.com/sergey-kruglov/dictionary-tgbot#readme"
+}
