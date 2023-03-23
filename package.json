@@ -6,6 +6,8 @@
   "scripts": {
     "build": "rimraf ./dist && tsc",
     "start": "npm run build && node ./dist/index.js",
+    "format": "prettier --write ./src",
+    "lint": "eslint ./src --max-warnings 0 --report-unused-disable-directives",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -28,7 +30,11 @@
   "homepage": "https://github.com/sergey-kruglov/dictionary-tgbot#readme",
   "devDependencies": {
     "@types/node": "^18.15.5",
+    "@typescript-eslint/eslint-plugin": "^5.56.0",
+    "@typescript-eslint/parser": "^5.56.0",
     "eslint": "^8.36.0",
+    "eslint-config-prettier": "^8.8.0",
+    "prettier": "2.8.6",
     "rimraf": "^4.4.0",
     "typescript": "^5.0.2"
   }
