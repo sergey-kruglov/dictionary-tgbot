@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "rimraf ./dist && tsc",
-    "start": "npm run build && node ./dist/index.js",
+    "start": "npm run build && env $(cat .env | grep -v \"#\" | xargs) node ./dist/index.js",
     "format": "prettier --write ./src",
     "lint": "eslint ./src --max-warnings 0 --report-unused-disable-directives",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -37,5 +37,8 @@
     "prettier": "2.8.6",
     "rimraf": "^4.4.0",
     "typescript": "^5.0.2"
+  },
+  "dependencies": {
+    "telegraf": "^4.12.2"
   }
 }
