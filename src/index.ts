@@ -1,9 +1,10 @@
+import mongoose from 'mongoose';
 import { Telegraf } from 'telegraf';
 import { message } from 'telegraf/filters';
 import { InlineQueryResult } from 'typegram';
-import { Config } from './config';
+import { appConfig } from './config';
 
-const bot = new Telegraf(Config.telegram.token);
+const bot = new Telegraf(appConfig.telegram.token);
 
 bot.use(async (ctx, next) => {
   console.time(`Processing update ${ctx.update.update_id}`);
@@ -24,10 +25,6 @@ bot.command('save', async (ctx) => {
   await ctx.reply('started');
 });
 
-bot.command('test', async (ctx) => {
-  await ctx.reply('test');
-});
-
 bot.command('quit', async (ctx) => {
   await ctx.leaveChat();
 });
@@ -45,10 +42,15 @@ bot.on('inline_query', async (ctx) => {
   await ctx.answerInlineQuery(result);
 });
 
-bot.launch().catch((err) => {
-  throw err;
-});
-
 // Enable graceful stop
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
+
+async function run() {
+  await mongoose.connect(appConfig.mongodb.uri);
+  await bot.launch();
+}
+
+run().catch((err) => {
+  throw err;
+});

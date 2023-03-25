@@ -39,6 +39,7 @@
     "typescript": "^5.0.2"
   },
   "dependencies": {
+    "mongoose": "^7.0.3",
     "telegraf": "^4.12.2"
   }
 }

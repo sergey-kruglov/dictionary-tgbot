@@ -1,8 +1,13 @@
-export class Config {
-  static readonly app = {
-    ownerHash: process.env.APP_OWNER_HASH as string,
+export class AppConfig {
+  readonly app = {
+    ownerHash: process.env.APP_OWNER_HASH || '',
   };
-  static readonly telegram = {
-    token: process.env.TELEGRAM_TOKEN as string,
+  readonly mongodb = {
+    uri: process.env.MONGODB_URI || '',
+  };
+  readonly telegram = {
+    token: process.env.TELEGRAM_TOKEN || '',
   };
 }
+
+export const appConfig = new AppConfig();
