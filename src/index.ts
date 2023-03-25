@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 import { Telegraf } from 'telegraf';
 import { message } from 'telegraf/filters';
-import { InlineQueryResult } from 'typegram';
 import { appConfig } from './config';
+import { Message, User } from './models';
 
 const bot = new Telegraf(appConfig.telegram.token);
 
@@ -14,15 +14,50 @@ bot.use(async (ctx, next) => {
 });
 
 bot.start(async (ctx) => {
-  await ctx.reply('Welcome');
+  try {
+    const from = ctx.update.message.from;
+    await User.create({
+      id: from.id,
+      isBot: from.is_bot,
+      firstName: from.first_name,
+      lastName: from.last_name,
+      language: from.language_code,
+    });
+
+    const name = from.first_name || from.username || from.id;
+    await ctx.reply(`Welcome, ${name}`);
+  } catch {
+    await ctx.reply('There was an exception. Try to start again later.');
+  }
 });
 
 bot.help((ctx) => ctx.reply('There is no help!'));
 
-bot.hears('hi', (ctx) => ctx.reply('Hey there'));
-
 bot.command('save', async (ctx) => {
-  await ctx.reply('started');
+  const { message_id, from, text } = ctx.update.message;
+  const [, word, ...rest] = text.split(/\s/gi);
+  if (!word || rest.length) {
+    await ctx.reply('Incorrect command format. Example: /save word');
+    return;
+  }
+
+  if (!word.match(/^[a-z]+$/gi)) {
+    await ctx.reply('The word should contain only letters');
+    return;
+  }
+
+  try {
+    const user = await User.findOne({ id: from.id });
+    const message = new Message({
+      id: message_id,
+      text: word,
+      user,
+    });
+    await message.save();
+    await ctx.reply(`Word ${word} was saved`);
+  } catch (err) {
+    await ctx.reply('There was an exception. Try to repeat later.');
+  }
 });
 
 bot.command('quit', async (ctx) => {
@@ -30,21 +65,22 @@ bot.command('quit', async (ctx) => {
 });
 
 bot.on(message('text'), async (ctx) => {
-  await ctx.reply(`Hello ${ctx.state.role as string}`);
-});
-
-bot.on('callback_query', async (ctx) => {
-  await ctx.answerCbQuery();
-});
-
-bot.on('inline_query', async (ctx) => {
-  const result: InlineQueryResult[] = [];
-  await ctx.answerInlineQuery(result);
+  await ctx.deleteMessage(ctx.update.message.message_id);
 });
 
 // Enable graceful stop
-process.once('SIGINT', () => bot.stop('SIGINT'));
-process.once('SIGTERM', () => bot.stop('SIGTERM'));
+process.once('SIGINT', () => {
+  bot.stop('SIGINT');
+  mongoose.disconnect().catch((err) => {
+    throw err;
+  });
+});
+process.once('SIGTERM', () => {
+  bot.stop('SIGTERM');
+  mongoose.disconnect().catch((err) => {
+    throw err;
+  });
+});
 
 async function run() {
   await mongoose.connect(appConfig.mongodb.uri);
