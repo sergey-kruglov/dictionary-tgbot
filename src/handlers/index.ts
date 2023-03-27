@@ -1,5 +1,5 @@
+import { timeMiddleware } from 'src/middleware/time';
 import { Telegraf } from 'telegraf';
-import { timeMiddleware } from '../middleware/time';
 import { saveHandler } from './save';
 import { startHandler } from './start';
 import { messageHandler } from './text';

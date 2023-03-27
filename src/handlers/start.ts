@@ -1,5 +1,5 @@
-import { CommandCtx } from '../common/types';
-import { User } from '../models';
+import { CommandCtx } from 'src/common/types';
+import { User } from 'src/models';
 
 export async function startHandler(ctx: CommandCtx): Promise<void> {
   const from = ctx.update.message.from;
