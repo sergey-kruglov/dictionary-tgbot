@@ -5,8 +5,11 @@
   "main": "index.js",
   "scripts": {
     "build": "rimraf ./dist && tsc",
+    "env": "env $(cat .env | grep -v \"#\" | xargs)",
     "exec": "node -r ts-node/register/transpile-only -r tsconfig-paths/register dist/index.js",
-    "start": "npm run build && env $(cat .env | grep -v \"#\" | xargs) npm run exec",
+    "ts-exec": "ts-node -r tsconfig-paths/register src/index.ts",
+    "start": "npm run build && npm run env npm run exec",
+    "start:dev": "nodemon",
     "format": "prettier --write ./src",
     "lint": "eslint ./src --max-warnings 0 --report-unused-disable-directives",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -35,14 +38,15 @@
     "@typescript-eslint/parser": "^5.56.0",
     "eslint": "^8.36.0",
     "eslint-config-prettier": "^8.8.0",
+    "nodemon": "^2.0.22",
     "prettier": "2.8.6",
     "rimraf": "^4.4.0",
-    "ts-node": "^10.9.1",
-    "tsconfig-paths": "^4.1.2",
     "typescript": "^5.0.2"
   },
   "dependencies": {
+    "ts-node": "^10.9.1",
     "mongoose": "^7.0.3",
-    "telegraf": "^4.12.2"
+    "telegraf": "^4.12.2",
+    "tsconfig-paths": "^4.1.2"
   }
 }
