@@ -8,12 +8,7 @@ export async function timeMiddleware(
   console.time(`Processing update ${ctx.update.update_id}`);
 
   // runs next middleware
-  await next().catch((err: Error) => {
-    console.log(err.message);
-    ctx
-      .reply(err.message || 'There was an exception. Try again later.')
-      .catch((e) => console.log(e));
-  });
+  await next();
 
   // runs after next middleware finishes
   console.timeEnd(`Processing update ${ctx.update.update_id}`);
