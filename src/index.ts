@@ -5,7 +5,7 @@ import { configureShutdown } from './common/shutdown';
 import { configureHandlers } from './handlers';
 
 async function run() {
-  const bot = new Telegraf(appConfig.telegram.token);
+  const bot = new Telegraf(appConfig.token.telegram);
   configureHandlers(bot);
   configureShutdown(bot);
   await mongoose.connect(appConfig.mongodb.uri);

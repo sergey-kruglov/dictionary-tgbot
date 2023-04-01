@@ -1,12 +1,10 @@
 export class AppConfig {
-  readonly app = {
-    ownerHash: process.env.APP_OWNER_HASH || '',
-  };
   readonly mongodb = {
     uri: process.env.MONGODB_URI || '',
   };
-  readonly telegram = {
-    token: process.env.TELEGRAM_TOKEN || '',
+  readonly token = {
+    telegram: process.env.TOKEN_TELEGRAM || '',
+    rapidApi: process.env.TOKEN_RAPID_API || '',
   };
 }
 
