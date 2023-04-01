@@ -12,5 +12,7 @@ export async function startHandler(ctx: CommandCtx): Promise<void> {
   });
 
   const name = from.first_name || from.username || from.id;
-  await ctx.reply(`Welcome, ${name}`);
+  await ctx.reply(
+    `Welcome, ${name}. Write a word to get a definition and pronunciation.`
+  );
 }
