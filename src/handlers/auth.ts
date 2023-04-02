@@ -9,7 +9,7 @@ export async function authHandler(ctx: CommandCtx): Promise<void> {
     throw new Error(Errors.INCORRECT_FORMAT);
   }
 
-  await User.findOne(
+  await User.updateOne(
     { id: from.id },
     {
       $set: {
@@ -18,5 +18,5 @@ export async function authHandler(ctx: CommandCtx): Promise<void> {
     }
   );
 
-  await ctx.reply(`Your token has been saved`);
+  await ctx.reply('Your token has been saved');
 }

@@ -1,5 +1,9 @@
 import { Context, NarrowedContext } from 'telegraf';
-import { Message, Update } from 'telegraf/typings/core/types/typegram';
+import {
+  CallbackQuery,
+  Message,
+  Update,
+} from 'telegraf/typings/core/types/typegram';
 
 export type CommandCtx = NarrowedContext<
   Context<Update>,
@@ -12,4 +16,9 @@ export type CommandCtx = NarrowedContext<
 export type MessageCtx = NarrowedContext<
   Context<Update>,
   Update.MessageUpdate<Message>
+>;
+
+export type CallbackCtx = NarrowedContext<
+  Context<Update>,
+  Update.CallbackQueryUpdate<CallbackQuery>
 >;
