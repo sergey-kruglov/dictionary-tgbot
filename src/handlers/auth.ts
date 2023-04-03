@@ -18,5 +18,6 @@ export async function authHandler(ctx: CommandCtx): Promise<void> {
     }
   );
 
+  await ctx.deleteMessage(ctx.update.message.message_id);
   await ctx.reply('Your token has been saved');
 }
