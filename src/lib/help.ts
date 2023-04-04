@@ -3,6 +3,7 @@ This bot uses external API.
 You need to obtain an API key here: https://rapidapi.com/dpventures/api/wordsapi
 
 After obtaining the API key, use the command /auth <key> to save your API key in the bot.
+Then you can write a word to get a definition and pronunciation.
 
 
 Command list:
