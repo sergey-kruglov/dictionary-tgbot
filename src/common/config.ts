@@ -1,11 +1,6 @@
 export class AppConfig {
-  readonly mongodb = {
-    uri: process.env.MONGODB_URI || '',
-  };
-  readonly token = {
-    telegram: process.env.TOKEN_TELEGRAM || '',
-    rapidApi: process.env.TOKEN_RAPID_API || '',
-  };
+  readonly mongodbUri = process.env.MONGODB_URI || '';
+  readonly telegramToken = process.env.TELEGRAM_TOKEN || '';
 }
 
 export const appConfig = new AppConfig();
