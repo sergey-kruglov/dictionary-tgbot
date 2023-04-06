@@ -8,10 +8,10 @@ export interface IUser {
   firstName?: string;
   lastName?: string;
   language?: string;
-  authMessageId?: number;
+  rapidApiKey?: string;
 }
 
-export const userSchema = new Schema<IUser>(
+const userSchema = new Schema<IUser>(
   {
     id: { type: Number, required: true, index: true, unique: true },
     isBot: { type: Boolean, required: true },
@@ -20,7 +20,7 @@ export const userSchema = new Schema<IUser>(
     firstName: { type: String },
     lastName: { type: String },
     language: { type: String },
-    authMessageId: { type: Number },
+    rapidApiKey: { type: String },
   },
   { timestamps: true }
 );

@@ -4,9 +4,7 @@ import { User } from 'src/models';
 export async function startHandler(ctx: CommandCtx): Promise<void> {
   const from = ctx.update.message.from;
   await User.updateOne(
-    {
-      id: from.id,
-    },
+    { id: from.id },
     {
       isBot: from.is_bot,
       firstName: from.first_name,

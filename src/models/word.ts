@@ -1,17 +1,34 @@
 import { model, Schema } from 'mongoose';
 
+export interface IWordDefinition {
+  definition: string;
+  partOfSpeech: string;
+  synonyms: string[];
+  examples: string[];
+}
+
 export interface IWord {
   writing: string;
-  definitions: string[];
+  definitions: IWordDefinition[];
   pronunciation: string;
   requestedCount: number;
   savedCount: number;
 }
 
-export const wordSchema = new Schema<IWord>(
+const wordDefinitionSchema = new Schema<IWordDefinition>(
+  {
+    definition: { type: String },
+    partOfSpeech: { type: String },
+    synonyms: { type: [String] },
+    examples: { type: [String] },
+  },
+  { _id: false }
+);
+
+const wordSchema = new Schema<IWord>(
   {
     writing: { type: String, index: true },
-    definitions: { type: [String] },
+    definitions: [wordDefinitionSchema],
     pronunciation: { type: String },
     requestedCount: { type: Number },
     savedCount: { type: Number },

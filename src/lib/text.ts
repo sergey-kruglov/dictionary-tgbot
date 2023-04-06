@@ -19,8 +19,3 @@ You can find the source code of this bot here: https://github.com/sergey-kruglov
 
 Contact info: https://sergey-kruglov.com
 `;
-
-export const authText =
-  `Message ID saved. The bot doesn't store the token in the database.` +
-  `It uses message id to find the token and use it for WordsAPI.` +
-  `If you remove this message, the bot cannot request WordsAPI.`;
