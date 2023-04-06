@@ -5,6 +5,7 @@ export interface IWord {
   definitions: string[];
   pronunciation: string;
   requestedCount: number;
+  savedCount: number;
 }
 
 export const wordSchema = new Schema<IWord>(
@@ -13,6 +14,7 @@ export const wordSchema = new Schema<IWord>(
     definitions: { type: [String] },
     pronunciation: { type: String },
     requestedCount: { type: Number },
+    savedCount: { type: Number },
   },
   { timestamps: true }
 );
