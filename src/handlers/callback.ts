@@ -4,17 +4,23 @@ import { User, Word } from 'src/models';
 export async function callbackHandler(ctx: CallbackCtx) {
   if (!('data' in ctx.update.callback_query)) return;
 
-  const [action, requestWord] = ctx.update.callback_query.data;
+  const { data, message } = ctx.update.callback_query;
+  const [action, writing] = data.split(':');
   if (action === 'no') return;
 
-  const word = await Word.findOne({ word: requestWord }, '_id');
-
-  await User.updateOne(
-    { id: ctx.update.callback_query.from.id },
-    { $addToSet: { words: word } }
+  const result = await User.updateOne(
+    {
+      id: message?.from?.id,
+      writing: { $nin: [writing] },
+    },
+    { $addToSet: { words: writing } }
   );
 
-  const messageId = ctx.update.callback_query.message?.message_id;
+  if (result.matchedCount) {
+    await Word.updateOne({ writing }, { $inc: { savedCount: 1 } });
+  }
+
+  const messageId = message?.message_id;
   if (!messageId) return;
 
   await ctx.deleteMessage(messageId);
