@@ -8,7 +8,7 @@ export interface IUser {
   firstName?: string;
   lastName?: string;
   language?: string;
-  authMessageId?: string;
+  authMessageId?: number;
 }
 
 export const userSchema = new Schema<IUser>(
@@ -20,7 +20,7 @@ export const userSchema = new Schema<IUser>(
     firstName: { type: String },
     lastName: { type: String },
     language: { type: String },
-    authMessageId: { type: String },
+    authMessageId: { type: Number },
   },
   { timestamps: true }
 );
