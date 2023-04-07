@@ -5,6 +5,7 @@ export interface IUser {
   isBot: boolean;
   chatId: number;
   words: string[];
+  wordsCount: number;
   username?: string;
   firstName?: string;
   lastName?: string;
@@ -17,7 +18,8 @@ const userSchema = new Schema<IUser>(
     id: { type: Number, required: true, index: true, unique: true },
     isBot: { type: Boolean, required: true },
     chatId: { type: Number },
-    words: { type: [String] },
+    words: { type: [String], default: [] },
+    wordsCount: { type: Number, default: 0 },
     username: { type: String },
     firstName: { type: String },
     lastName: { type: String },

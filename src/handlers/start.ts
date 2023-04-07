@@ -6,11 +6,13 @@ export async function startHandler(ctx: CommandCtx): Promise<void> {
   await User.updateOne(
     { id: from.id },
     {
-      isBot: from.is_bot,
-      firstName: from.first_name,
-      lastName: from.last_name,
-      language: from.language_code,
-      chatId: chat.id,
+      $set: {
+        isBot: from.is_bot,
+        firstName: from.first_name,
+        lastName: from.last_name,
+        language: from.language_code,
+        chatId: chat.id,
+      },
     },
     { upsert: true }
   );

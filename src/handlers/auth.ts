@@ -10,7 +10,7 @@ export async function authHandler(ctx: CommandCtx): Promise<void> {
   }
 
   // TODO add encryption
-  await User.updateOne({ id: from.id }, { $set: { rapidApiKey: text } });
+  await User.updateOne({ id: from.id }, { $set: { rapidApiKey: token } });
   await ctx.deleteMessage(message_id);
   await ctx.reply('Token saved. Write a word to test it.');
 }

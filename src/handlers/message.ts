@@ -101,12 +101,12 @@ function prepareMarkdown(word: IWord): string {
 
     const definitions = parts[partOfSpeech];
     for (const definition of definitions) {
+      // escape all characters except letters and numbers
       const definitionText = definition.definition.replace(
         /[^a-zA-Z0-9]/g,
         '\\$&'
       );
 
-      console.log(definitionText);
       markdown += `  \\> ${definitionText}\n`;
     }
 
