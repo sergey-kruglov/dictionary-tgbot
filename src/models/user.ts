@@ -3,6 +3,7 @@ import { model, Schema } from 'mongoose';
 export interface IUser {
   id: number;
   isBot: boolean;
+  chatId: number;
   words: string[];
   username?: string;
   firstName?: string;
@@ -15,6 +16,7 @@ const userSchema = new Schema<IUser>(
   {
     id: { type: Number, required: true, index: true, unique: true },
     isBot: { type: Boolean, required: true },
+    chatId: { type: Number },
     words: { type: [String] },
     username: { type: String },
     firstName: { type: String },

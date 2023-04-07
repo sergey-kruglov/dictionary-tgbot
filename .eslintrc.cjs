@@ -17,5 +17,6 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 'error',
     '@typescript-eslint/no-explicit-any': 'error',
     '@typescript-eslint/no-floating-promises': 'warn',
+    '@typescript-eslint/unbound-method': 'off',
   },
 };

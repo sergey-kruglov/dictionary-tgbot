@@ -2,7 +2,7 @@ import { CommandCtx } from 'src/common/types';
 import { User } from 'src/models';
 
 export async function startHandler(ctx: CommandCtx): Promise<void> {
-  const from = ctx.update.message.from;
+  const { from, chat } = ctx.update.message;
   await User.updateOne(
     { id: from.id },
     {
@@ -10,6 +10,7 @@ export async function startHandler(ctx: CommandCtx): Promise<void> {
       firstName: from.first_name,
       lastName: from.last_name,
       language: from.language_code,
+      chatId: chat.id,
     },
     { upsert: true }
   );
