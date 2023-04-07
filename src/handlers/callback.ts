@@ -17,7 +17,7 @@ export async function callbackHandler(ctx: CallbackCtx) {
       id: from.id,
       writing: { $nin: [writing] },
     },
-    { $addToSet: { words: writing } }
+    { $addToSet: { words: writing }, $inc: { wordsCount: 1 } }
   );
 
   if (result.matchedCount) {
