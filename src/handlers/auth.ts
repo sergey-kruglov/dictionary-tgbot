@@ -9,7 +9,6 @@ export async function authHandler(ctx: CommandCtx): Promise<void> {
     throw new Error(Errors.INCORRECT_FORMAT);
   }
 
-  // TODO add encryption
   await User.updateOne({ id: from.id }, { $set: { rapidApiKey: token } });
   await ctx.deleteMessage(message_id);
   await ctx.reply('Token saved. Write a word to test it.');

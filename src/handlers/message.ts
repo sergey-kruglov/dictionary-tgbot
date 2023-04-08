@@ -1,5 +1,6 @@
 /* eslint-disable no-useless-escape */
 import axios from 'axios';
+import { appConfig } from 'src/common/config';
 import { MessageCtx } from 'src/common/types';
 import { prepareMarkdown } from 'src/common/utils';
 import { RapidApiResponse, Result } from 'src/interfaces/rapid-api-response';
@@ -46,11 +47,10 @@ export async function messageHandler(ctx: MessageCtx) {
   const user = await User.findOne({ id: from.id }, 'rapidApiKey');
   if (!user) throw new Error(Errors.USER_NOT_FOUND);
 
-  // TODO add decryption
   const { data } = await axios
     .get<RapidApiResponse>(
       `https://wordsapiv1.p.rapidapi.com/words/${writing}`,
-      { headers: { 'X-RapidAPI-Key': user.rapidApiKey } }
+      { headers: { 'X-RapidAPI-Key': appConfig.rapidApiKey } }
     )
     .catch((err: Error) => {
       throw new Error(err.message || Errors.INTERNAL_SERVER_EXCEPTION);

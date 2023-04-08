@@ -10,7 +10,6 @@ export interface IUser {
   firstName?: string;
   lastName?: string;
   language?: string;
-  rapidApiKey?: string;
 }
 
 const userSchema = new Schema<IUser>(
@@ -24,7 +23,6 @@ const userSchema = new Schema<IUser>(
     firstName: { type: String },
     lastName: { type: String },
     language: { type: String },
-    rapidApiKey: { type: String },
   },
   { timestamps: true }
 );
