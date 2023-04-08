@@ -11,7 +11,7 @@ async function run() {
   configureShutdown(bot);
   await mongoose.connect(appConfig.mongodbUri);
   bot.launch().catch((err) => console.log(err));
-  Scheduler.start();
+  Scheduler.start(bot);
 }
 
 run().catch((err) => {
