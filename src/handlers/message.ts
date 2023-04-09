@@ -5,7 +5,7 @@ import { MessageCtx } from 'src/common/types';
 import { prepareMarkdown } from 'src/common/utils';
 import { RapidApiResponse, Result } from 'src/interfaces/rapid-api-response';
 import { Errors } from 'src/lib/errors';
-import { User, Word } from 'src/models';
+import { Settings, Word } from 'src/models';
 import { IWordDefinition } from 'src/models/word';
 
 export async function messageHandler(ctx: MessageCtx) {
@@ -14,7 +14,7 @@ export async function messageHandler(ctx: MessageCtx) {
     return;
   }
 
-  const { text, from } = ctx.update.message;
+  const { text } = ctx.update.message;
   const [writing, ...rest] = text.split(/\s/gi);
   if (!writing || rest.length) {
     throw new Error(Errors.INCORRECT_FORMAT);
@@ -44,8 +44,19 @@ export async function messageHandler(ctx: MessageCtx) {
     return;
   }
 
-  const user = await User.findOne({ id: from.id }, 'rapidApiKey');
-  if (!user) throw new Error(Errors.USER_NOT_FOUND);
+  const secondsInOneDay = 86400;
+  const nextDay = new Date().getTime() + secondsInOneDay * 1000;
+  await Settings.updateOne(
+    { counterResetDate: { $lt: new Date() } },
+    { $set: { counterResetDate: new Date(nextDay), requestCount: 0 } }
+  );
+  const settings = await Settings.updateOne(
+    { requestCount: { $lt: 5 } }, // free tier is 2500 req/day
+    { $inc: { requestCount: 1 } }
+  );
+  if (!settings.modifiedCount) {
+    throw new Error(Errors.REQUEST_LIMIT_EXCEEDED);
+  }
 
   const { data } = await axios
     .get<RapidApiResponse>(
