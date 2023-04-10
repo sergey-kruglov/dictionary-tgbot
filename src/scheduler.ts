@@ -6,9 +6,9 @@ import { IWord } from './models/word';
 
 export class Scheduler {
   public static start(bot: Telegraf): void {
-    // every hour
+    // from 6 to 20 UTC
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    cron.schedule('0 * * * *', async () => {
+    cron.schedule('0 6-20 * * *', async () => {
       const usersCount = await User.count();
       console.log(`Send scheduled messages. Count: ${usersCount}`);
 
