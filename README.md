@@ -1,5 +1,6 @@
 # dictionary-tgbot
 
+@sk_dictionary_bot
 Telegram bot that helps to remember words
 
 ## TODO
