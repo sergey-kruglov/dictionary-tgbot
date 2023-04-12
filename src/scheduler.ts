@@ -6,9 +6,9 @@ import { IWord } from './models/word';
 
 export class Scheduler {
   public static start(bot: Telegraf): void {
-    // from 6 to 20 UTC
+    // every minute
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    cron.schedule('0 6-20 * * *', async () => {
+    cron.schedule('* * * * *', async () => {
       const usersCount = await User.count();
       console.log(`Send scheduled messages. Count: ${usersCount}`);
 
@@ -18,6 +18,7 @@ export class Scheduler {
       for (let count = 0; count < usersCount; count += 100) {
         const users: { _id: string; chatId: number; word: IWord[] }[] =
           await User.aggregate([
+            { $match: { nextReminderDate: { $lte: new Date() } } },
             { $sort: { _id: 1 } },
             { $skip: skip },
             { $limit: limit },

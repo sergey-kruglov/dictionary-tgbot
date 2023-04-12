@@ -6,6 +6,11 @@ export interface IUser {
   chatId: number;
   words: string[];
   wordsCount: number;
+  timeZone: number;
+  nextReminderDate: Date;
+  reminderInterval: number; // minutes
+  reminderStartTime: string;
+  reminderEndTime: string;
   username?: string;
   firstName?: string;
   lastName?: string;
@@ -19,6 +24,11 @@ const userSchema = new Schema<IUser>(
     chatId: { type: Number },
     words: { type: [String], default: [] },
     wordsCount: { type: Number, default: 0 },
+    timeZone: { type: Number, default: 0 },
+    nextReminderDate: { type: Date, default: Date.now },
+    reminderInterval: { type: Number, default: 60 },
+    reminderStartTime: { type: String, default: '10:00' },
+    reminderEndTime: { type: String, default: '20:00' },
     username: { type: String },
     firstName: { type: String },
     lastName: { type: String },
