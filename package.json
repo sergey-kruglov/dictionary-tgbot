@@ -6,8 +6,8 @@
   "scripts": {
     "build": "rimraf ./dist && tsc",
     "env": "env $(cat .env | grep -v \"#\" | xargs)",
-    "exec": "node -r ts-node/register/transpile-only -r tsconfig-paths/register dist/index.js",
-    "ts-exec": "ts-node -r tsconfig-paths/register src/index.ts",
+    "exec": "TS_NODE_BASEURL=./dist node -r ts-node/register/transpile-only -r tsconfig-paths/register dist/index.js",
+    "ts-exec": " ts-node -r tsconfig-paths/register src/index.ts",
     "start": "npm run build && npm run env npm run exec",
     "start:dev": "nodemon",
     "format": "prettier --write ./src",
