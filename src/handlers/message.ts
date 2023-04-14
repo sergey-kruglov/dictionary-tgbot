@@ -51,7 +51,7 @@ export async function messageHandler(ctx: MessageCtx) {
     { $set: { counterResetDate: new Date(nextDay), requestCount: 0 } }
   );
   const settings = await Settings.updateOne(
-    { requestCount: { $lt: 5 } }, // free tier is 2500 req/day
+    { requestCount: { $lt: 2500 } }, // free tier is 2500 req/day
     { $inc: { requestCount: 1 } }
   );
   if (!settings.modifiedCount) {
