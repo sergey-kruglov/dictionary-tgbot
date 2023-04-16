@@ -4,7 +4,7 @@ import { appConfig } from './common/config';
 import { configureShutdown } from './common/shutdown';
 import { configureHandlers } from './handlers';
 import { Settings } from './models';
-// import { Scheduler } from './scheduler';
+import { Scheduler } from './scheduler';
 
 async function run() {
   const bot = new Telegraf(appConfig.telegramToken);
@@ -18,7 +18,7 @@ async function run() {
   }
 
   bot.launch().catch((err) => console.log(err));
-  // Scheduler.start(bot);
+  Scheduler.start(bot);
 }
 
 run().catch((err) => {
