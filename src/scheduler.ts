@@ -18,7 +18,13 @@ export class Scheduler {
       for (let count = 0; count < usersCount; count += 100) {
         const users: { _id: string; chatId: number; word: IWord[] }[] =
           await User.aggregate([
-            { $match: { nextReminderDate: { $lte: new Date() } } },
+            {
+              $match: {
+                nextReminderDate: { $lte: new Date() },
+                words: { $ne: [] },
+                reminderStatus: true,
+              },
+            },
             { $sort: { _id: 1 } },
             { $skip: skip },
             { $limit: limit },

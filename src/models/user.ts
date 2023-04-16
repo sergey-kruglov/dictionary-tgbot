@@ -11,6 +11,7 @@ export interface IUser {
   reminderInterval: number; // minutes
   reminderStartTime: string;
   reminderEndTime: string;
+  reminderStatus: boolean;
   username?: string;
   firstName?: string;
   lastName?: string;
@@ -29,6 +30,7 @@ const userSchema = new Schema<IUser>(
     reminderInterval: { type: Number, default: 60 },
     reminderStartTime: { type: String, default: '10:00' },
     reminderEndTime: { type: String, default: '20:00' },
+    reminderStatus: { type: Boolean, default: true },
     username: { type: String },
     firstName: { type: String },
     lastName: { type: String },
