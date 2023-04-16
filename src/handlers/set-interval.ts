@@ -1,5 +1,5 @@
 import { CommandCtx } from 'src/common/types';
-import { Errors } from 'src/lib/errors';
+import { getCommandTextOrFail, validateIntOrFail } from 'src/common/utils';
 import { User } from 'src/models';
 
 export async function setReminderInterval(ctx: CommandCtx): Promise<void> {
@@ -9,22 +9,11 @@ export async function setReminderInterval(ctx: CommandCtx): Promise<void> {
   }
 
   const { from, text } = ctx.update.message;
-  const [, interval, ...rest] = text.split(/\s/gi);
-  if (!interval || rest.length) {
-    throw new Error(Errors.INCORRECT_FORMAT);
-  }
-
-  if (!interval.match(/^[0-9]+$/gi)) {
-    throw new Error(Errors.ONLY_NUMBERS_ALLOWED);
-  }
+  const interval = getCommandTextOrFail(text);
+  validateIntOrFail(interval);
 
   const reminderInterval = parseInt(interval);
-
-  await User.updateOne(
-    { id: from.id },
-    { $set: { reminderInterval } },
-    { upsert: true }
-  );
+  await User.updateOne({ id: from.id }, { $set: { reminderInterval } });
 
   await ctx.reply(`Your interval is now: ${reminderInterval}`);
 }

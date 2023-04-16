@@ -22,3 +22,5 @@ export type CallbackCtx = NarrowedContext<
   Context<Update>,
   Update.CallbackQueryUpdate<CallbackQuery>
 >;
+
+export type TextMessage = Update.New & Update.NonChannel & Message.TextMessage;

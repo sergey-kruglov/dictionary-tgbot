@@ -1,3 +1,4 @@
+import { Errors } from 'src/lib/errors';
 import { IWord, IWordDefinition } from 'src/models/word';
 
 export function prepareMarkdown(word: IWord): string {
@@ -30,4 +31,19 @@ export function prepareMarkdown(word: IWord): string {
   }
 
   return markdown;
+}
+
+export function getCommandTextOrFail(str: string): string {
+  const [, text, ...rest] = str.split(/\s/gi);
+  if (!text || rest.length) {
+    throw new Error(Errors.INCORRECT_FORMAT);
+  }
+
+  return text;
+}
+
+export function validateIntOrFail(str: string): void {
+  if (!str.match(/^[0-9]+$/gi)) {
+    throw new Error(Errors.ONLY_NUMBERS_ALLOWED);
+  }
 }
