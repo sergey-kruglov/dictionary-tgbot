@@ -5,8 +5,8 @@ Telegram bot that helps to remember words
 
 ## TODO
 
-- [ ] Add timezones
-- [ ] Add set time interval
+- [x] Add timezones
+- [x] Add set time interval
 - [x] Add repeat interval
 - [ ] Add user limit 100 words/day
 - [ ] Add examples
