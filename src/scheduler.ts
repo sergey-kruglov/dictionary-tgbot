@@ -49,6 +49,8 @@ export class Scheduler {
             },
           ]);
 
+        // TODO add user next reminder date update
+
         const messagePromises = [];
         for (const user of users) {
           const word = user.word?.[0];
