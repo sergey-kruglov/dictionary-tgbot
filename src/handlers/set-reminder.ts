@@ -1,8 +1,8 @@
-import { CommandCtx } from 'src/common/types';
-import { getCommandTextOrFail } from 'src/common/utils';
-import { Handler } from 'src/interfaces/handler';
-import { Errors } from 'src/lib/errors';
-import { User } from 'src/models';
+import { CommandCtx } from '../common/types';
+import { getCommandTextOrFail } from '../common/utils';
+import { Handler } from '../interfaces/handler';
+import { Errors } from '../lib/errors';
+import { User } from '../models';
 
 class SetReminderHandler implements Handler {
   async handle(ctx: CommandCtx): Promise<void> {

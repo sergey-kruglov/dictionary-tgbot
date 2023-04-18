@@ -1,6 +1,6 @@
-import { CommandCtx } from 'src/common/types';
-import { Handler } from 'src/interfaces/handler';
-import { helpText } from 'src/lib/help';
+import { CommandCtx } from '../common/types';
+import { Handler } from '../interfaces/handler';
+import { helpText } from '../lib/help';
 
 class HelpHandler implements Handler {
   async handle(ctx: CommandCtx): Promise<void> {

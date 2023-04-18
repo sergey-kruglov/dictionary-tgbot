@@ -1,7 +1,7 @@
-import { CommandCtx } from 'src/common/types';
-import { getCommandTextOrFail, validateIntOrFail } from 'src/common/utils';
-import { Handler } from 'src/interfaces/handler';
-import { User } from 'src/models';
+import { CommandCtx } from '../common/types';
+import { getCommandTextOrFail, validateIntOrFail } from '../common/utils';
+import { Handler } from '../interfaces/handler';
+import { User } from '../models';
 
 class SetIntervalHandler implements Handler {
   async handle(ctx: CommandCtx) {

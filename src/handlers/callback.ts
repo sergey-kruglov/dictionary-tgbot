@@ -1,6 +1,6 @@
-import { CallbackCtx } from 'src/common/types';
-import { Handler } from 'src/interfaces/handler';
-import { User, Word } from 'src/models';
+import { CallbackCtx } from '../common/types';
+import { Handler } from '../interfaces/handler';
+import { User, Word } from '../models';
 
 class CallbackHandler implements Handler {
   async handle(ctx: CallbackCtx): Promise<void> {

@@ -1,5 +1,5 @@
-import { Errors } from 'src/lib/errors';
-import { IWord, IWordDefinition } from 'src/models/word';
+import { Errors } from '../lib/errors';
+import { IWord, IWordDefinition } from '../models/word';
 
 export function prepareMarkdown(word: IWord): string {
   let markdown = `*${word.writing}* \\- _${word.pronunciation}_\n\n`;

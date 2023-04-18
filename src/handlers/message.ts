@@ -1,17 +1,17 @@
 /* eslint-disable no-useless-escape */
 import axios from 'axios';
-import { appConfig } from 'src/common/config';
-import { MessageCtx } from 'src/common/types';
+import { appConfig } from '../common/config';
+import { MessageCtx } from '../common/types';
 import {
   getWordOrFail,
   prepareMarkdown,
   validateWordOrFail,
-} from 'src/common/utils';
-import { Handler } from 'src/interfaces/handler';
-import { RapidApiResponse, Result } from 'src/interfaces/rapid-api-response';
-import { Errors } from 'src/lib/errors';
-import { Settings, Word } from 'src/models';
-import { IWord, IWordDefinition } from 'src/models/word';
+} from '../common/utils';
+import { Handler } from '../interfaces/handler';
+import { RapidApiResponse, Result } from '../interfaces/rapid-api-response';
+import { Errors } from '../lib/errors';
+import { Settings, Word } from '../models';
+import { IWord, IWordDefinition } from '../models/word';
 
 class MessageHandler implements Handler {
   async handle(ctx: MessageCtx): Promise<void> {

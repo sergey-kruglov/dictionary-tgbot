@@ -1,7 +1,7 @@
-import { CommandCtx } from 'src/common/types';
-import { Handler } from 'src/interfaces/handler';
-import { User } from 'src/models';
 import { User as TgUser } from 'telegraf/typings/core/types/typegram';
+import { CommandCtx } from '../common/types';
+import { Handler } from '../interfaces/handler';
+import { User } from '../models';
 
 class StartHandler implements Handler {
   async handle(ctx: CommandCtx): Promise<void> {
