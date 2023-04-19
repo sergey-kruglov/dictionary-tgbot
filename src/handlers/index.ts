@@ -4,6 +4,7 @@ import { timeMiddleware } from '../middleware/time';
 import { callbackHandler } from './callback';
 import { helpHandler } from './help';
 import { messageHandler } from './message';
+import { setReminderHandler } from './set-reminder';
 import { setIntervalHandler } from './set-interval';
 import { setTimeZoneHandler } from './set-timezone';
 import { startHandler } from './start';
@@ -11,6 +12,7 @@ import { startHandler } from './start';
 export function configureHandlers(bot: Telegraf) {
   bot.use(exceptionMiddleware, timeMiddleware);
   bot.command('start', (ctx) => startHandler.handle(ctx));
+  bot.command('setReminder', (ctx) => setReminderHandler.handle(ctx));
   bot.command('setInterval', (ctx) => setIntervalHandler.handle(ctx));
   bot.command('setTimeZone', (ctx) => setTimeZoneHandler.handle(ctx));
   bot.command('help', (ctx) => helpHandler.handle(ctx));
