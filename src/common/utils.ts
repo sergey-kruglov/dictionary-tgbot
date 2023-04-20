@@ -39,7 +39,7 @@ export function getWordOrFail(str: string): string {
     throw new Error(Errors.INCORRECT_FORMAT);
   }
 
-  return text;
+  return text.toLowerCase();
 }
 
 export function getCommandTextOrFail(str: string): string {
