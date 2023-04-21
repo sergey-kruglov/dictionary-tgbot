@@ -11,3 +11,4 @@ Telegram bot that helps to remember words
 - [ ] Add user limit 100 words/day
 - [ ] Add examples
 - [ ] Add random word request
+- [ ] Remove words
