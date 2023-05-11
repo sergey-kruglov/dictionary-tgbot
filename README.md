@@ -9,3 +9,4 @@ Telegram bot that helps to remember definitions of words.
 - [ ] Add random word request
 - [ ] Remove words
 - [ ] Add scheduling
+- [ ] Words reminder
