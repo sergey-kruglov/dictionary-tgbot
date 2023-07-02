@@ -26,7 +26,10 @@ const userSchema = new Schema<IUser>(
     words: { type: [String], default: [] },
     wordsCount: { type: Number, default: 0 },
     timeZone: { type: Number, default: 0 },
-    nextReminderDate: { type: Date, default: Date.now },
+    nextReminderDate: {
+      type: Date,
+      default: () => Math.ceil(new Date().getTime() / 1000),
+    },
     reminderInterval: { type: Number, default: 60 },
     reminderStartTime: { type: String, default: '10:00' },
     reminderEndTime: { type: String, default: '20:00' },
