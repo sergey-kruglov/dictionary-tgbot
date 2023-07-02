@@ -4,11 +4,12 @@ import { timeMiddleware } from '../middleware/time';
 import { callbackHandler } from './callback';
 import { helpHandler } from './help';
 import { messageHandler } from './message';
-import { setReminderHandler } from './set-reminder';
 import { setIntervalHandler } from './set-interval';
+import { setReminderHandler } from './set-reminder';
 import { setTimeZoneHandler } from './set-timezone';
 import { startHandler } from './start';
 
+// Configure middleware, commands and callbacks
 export function configureHandlers(bot: Telegraf) {
   bot.use(exceptionMiddleware, timeMiddleware);
   bot.command('start', (ctx) => startHandler.handle(ctx));

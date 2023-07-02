@@ -3,6 +3,14 @@ import { getCommandTextOrFail, validateIntOrFail } from '../common/utils';
 import { Handler } from '../interfaces/handler';
 import { User } from '../models';
 
+
+// TODO add timezone selector
+
+
+/**
+ * Handle /setTimeZone command.
+ * To properly set from and to dates, we need to know the timezone.
+ */
 class SetTimeZoneHandler implements Handler {
   async handle(ctx: CommandCtx): Promise<void> {
     if (!('text' in ctx.update.message)) {

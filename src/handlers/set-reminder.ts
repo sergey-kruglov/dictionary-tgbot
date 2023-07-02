@@ -4,6 +4,10 @@ import { Handler } from '../interfaces/handler';
 import { Errors } from '../lib/errors';
 import { User } from '../models';
 
+/**
+ * Handle /setReminder command.
+ * Enable or disable word reminders.
+ */
 class SetReminderHandler implements Handler {
   async handle(ctx: CommandCtx): Promise<void> {
     if (!('text' in ctx.update.message)) {

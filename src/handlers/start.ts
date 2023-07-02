@@ -3,6 +3,11 @@ import { CommandCtx } from '../common/types';
 import { Handler } from '../interfaces/handler';
 import { User } from '../models';
 
+/**
+ * Handle /start command.
+ * Create a user or update existing one,
+ * reply with Welcome message.
+ */
 class StartHandler implements Handler {
   async handle(ctx: CommandCtx): Promise<void> {
     const { from, chat } = ctx.update.message;
@@ -29,6 +34,7 @@ class StartHandler implements Handler {
     );
   }
 
+  // Reply with Welcome message
   private async reply(ctx: CommandCtx, from: TgUser): Promise<void> {
     const name = from.first_name || from.username || from.id;
     await ctx.reply(`Welcome, ${name}. Write /help to get more info`);
