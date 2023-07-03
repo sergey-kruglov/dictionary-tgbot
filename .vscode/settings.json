@@ -5,7 +5,7 @@
     "source.organizeImports": true
   },
   "editor.formatOnSave": true,
-  "prettier.configPath": "",
-  "prettier.prettierPath": "./node_modules/prettier",
-  "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }
