@@ -3,9 +3,7 @@ import { getCommandTextOrFail, validateIntOrFail } from '../common/utils';
 import { Handler } from '../interfaces/handler';
 import { User } from '../models';
 
-
 // TODO add timezone selector
-
 
 /**
  * Handle /setTimeZone command.

@@ -33,7 +33,7 @@ class CallbackHandler implements Handler {
       await Word.updateOne({ writing }, { $inc: { savedCount: 1 } });
     }
 
-     await ctx.deleteMessage(messageId);
+    await ctx.deleteMessage(messageId);
   }
 }
 

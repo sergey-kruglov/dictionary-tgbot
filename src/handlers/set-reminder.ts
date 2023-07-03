@@ -9,7 +9,9 @@ import { User } from '../models';
  * Enable or disable word reminders.
  */
 class SetReminderHandler implements Handler {
-  async handle(ctx: CommandCtx): Promise<void> {
+
+  async handle(ctx: CommandCtx): 
+  Promise<void> {
     if (!('text' in ctx.update.message)) {
       await ctx.deleteMessage(ctx.message.message_id);
       return;

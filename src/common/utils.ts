@@ -51,9 +51,35 @@ export function getCommandTextOrFail(str: string): string {
   return text;
 }
 
+export function getCommandWordsOrFail(
+  str: string,
+  wordsCount: number
+): string[] {
+  const parts = str.split(/\s/gi);
+  const words = parts.slice(1, 1 + wordsCount);
+
+  // If sliced words count not match the length of parts (except command word),
+  // throw an INCORRECT_FORMAT exception
+  if (words.length > parts.length - 1) {
+    throw new Error(Errors.INCORRECT_FORMAT);
+  }
+
+  return words;
+}
+
 export function validateIntOrFail(str: string): void {
   if (!str.match(/^[0-9]+$/gi)) {
     throw new Error(Errors.ONLY_NUMBERS_ALLOWED);
+  }
+}
+
+export function validateTimeOrFail(str: string): void {
+  const [first, last] = str.split(':');
+  const hours = parseInt(first);
+  const minutes = parseInt(last);
+
+  if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+    throw new Error(Errors.INCORRECT_FORMAT);
   }
 }
 
