@@ -19,10 +19,30 @@ class CallbackHandler implements Handler {
       return;
     }
 
-    // Add the word to the user and increment words counter
+    // if user already saved the word, we skip wordsCount update
+    const exists = await this.isWordAlreadyExists(from.id, writing);
+    if (!exists) {
+      // Add the word to the user and increment words counter
+      await this.updateUserWords(from.id, writing);
+    }
+
+    await ctx.deleteMessage(messageId);
+  }
+
+  async isWordAlreadyExists(id: number, writing: string): Promise<boolean> {
+    const user = await User.findOne({
+      id,
+      writing,
+    })
+      .select('id')
+      .lean();
+    return !!user;
+  }
+
+  async updateUserWords(id: number, writing: string) {
     const result = await User.updateOne(
       {
-        id: from.id,
+        id: id,
         writing: { $nin: [writing] },
       },
       { $addToSet: { words: writing }, $inc: { wordsCount: 1 } }
@@ -32,8 +52,6 @@ class CallbackHandler implements Handler {
     if (result.matchedCount) {
       await Word.updateOne({ writing }, { $inc: { savedCount: 1 } });
     }
-
-    await ctx.deleteMessage(messageId);
   }
 }
 
