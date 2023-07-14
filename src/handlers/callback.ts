@@ -32,7 +32,7 @@ class CallbackHandler implements Handler {
   async isWordAlreadyExists(id: number, writing: string): Promise<boolean> {
     const user = await User.findOne({
       id,
-      writing,
+      words: writing,
     })
       .select('id')
       .lean();
