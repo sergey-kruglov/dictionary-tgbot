@@ -49,6 +49,7 @@ class CallbackHandler implements Handler {
     );
 
     // Update statistics of words usage
+    // TODO add statistics of requested words + words in remember queue
     if (result.matchedCount) {
       await Word.updateOne({ writing }, { $inc: { savedCount: 1 } });
     }

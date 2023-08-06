@@ -1,5 +1,9 @@
 {
-  "cSpell.words": ["rapidapi", "wordsapiv"],
+  "cSpell.words": [
+    "rapidapi",
+    "timeframe",
+    "wordsapiv"
+  ],
   "editor.codeActionsOnSave": {
     "source.fixAll": true,
     "source.organizeImports": true

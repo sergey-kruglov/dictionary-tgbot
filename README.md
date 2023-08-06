@@ -7,6 +7,6 @@ Telegram bot that helps to remember definitions of words.
 
 - [ ] Add examples
 - [ ] Add random word request
-- [ ] Remove words
+- [x] Remove words
 - [ ] Add scheduling
 - [ ] Words reminder
