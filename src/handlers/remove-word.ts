@@ -22,11 +22,11 @@ class RemoveWordHandler implements Handler {
       { id: from.id },
       {
         $pull: { words: word },
-        wordsCount: { $inc: -1 },
+        $inc: { wordsCount: -1 },
       }
     );
 
-    await ctx.reply(`The word "${text}" has been removed from reminders`);
+    await ctx.reply(`The word "${word}" has been removed from reminders`);
   }
 }
 
