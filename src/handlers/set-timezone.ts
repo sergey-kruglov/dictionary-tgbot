@@ -1,13 +1,12 @@
+import * as momentTz from 'moment-timezone';
 import { CommandCtx } from '../common/types';
-import { getCommandTextOrFail, validateIntOrFail } from '../common/utils';
 import { Handler } from '../interfaces/handler';
+import { Errors } from '../lib/errors';
 import { User } from '../models';
-
-// TODO add timezone selector
 
 /**
  * Handle /setTimeZone command.
- * To properly set from and to dates, we need to know the timezone.
+ * To properly calculate from and to dates, we need to set the timezone.
  */
 class SetTimeZoneHandler implements Handler {
   async handle(ctx: CommandCtx): Promise<void> {
@@ -17,20 +16,18 @@ class SetTimeZoneHandler implements Handler {
     }
 
     const { from, text } = ctx.update.message;
-    const timeZone = this.getTimeZone(text);
-    await this.setUserTimeZone(ctx, from.id, timeZone);
-  }
+    const timeZones = momentTz.tz.names();
+    if (!timeZones.includes(text)) {
+      await ctx.reply(Errors.INCORRECT_FORMAT);
+    }
 
-  private getTimeZone(text: string): number {
-    const timezone = getCommandTextOrFail(text);
-    validateIntOrFail(timezone);
-    return parseInt(timezone);
+    await this.setUserTimeZone(ctx, from.id, text);
   }
 
   private async setUserTimeZone(
     ctx: CommandCtx,
     id: number,
-    timeZone: number
+    timeZone: string
   ): Promise<void> {
     await User.updateOne({ id }, { $set: { timeZone } });
     await ctx.reply(`Your timezone is now: ${timeZone}`);

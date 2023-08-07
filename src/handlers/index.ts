@@ -2,6 +2,7 @@ import { Telegraf } from 'telegraf';
 import { exceptionMiddleware } from '../middleware/exception';
 import { callbackHandler } from './callback';
 import { helpHandler } from './help';
+import { listTimeZonesHandler } from './list-timezones';
 import { messageHandler } from './message';
 import { removeWordHandler } from './remove-word';
 import { setIntervalHandler } from './set-interval';
@@ -19,6 +20,7 @@ export function configureHandlers(bot: Telegraf) {
   bot.command('setTimeFrame', (ctx) => setTimeFrameHandler.handle(ctx));
   bot.command('setInterval', (ctx) => setIntervalHandler.handle(ctx));
   bot.command('setTimeZone', (ctx) => setTimeZoneHandler.handle(ctx));
+  bot.command('listTimeZones', (ctx) => listTimeZonesHandler.handle(ctx));
   bot.command('help', (ctx) => helpHandler.handle(ctx));
   bot.on('message', (ctx) => messageHandler.handle(ctx));
   bot.on('callback_query', (ctx) => callbackHandler.handle(ctx));
