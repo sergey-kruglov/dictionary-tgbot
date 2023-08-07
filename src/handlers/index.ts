@@ -1,6 +1,5 @@
 import { Telegraf } from 'telegraf';
 import { exceptionMiddleware } from '../middleware/exception';
-import { timeMiddleware } from '../middleware/time';
 import { callbackHandler } from './callback';
 import { helpHandler } from './help';
 import { messageHandler } from './message';
@@ -13,7 +12,7 @@ import { startHandler } from './start';
 
 // Configure middleware, commands and callbacks
 export function configureHandlers(bot: Telegraf) {
-  bot.use(exceptionMiddleware, timeMiddleware);
+  bot.use(exceptionMiddleware);
   bot.command('start', (ctx) => startHandler.handle(ctx));
   bot.command('removeWord', (ctx) => removeWordHandler.handle(ctx));
   bot.command('setReminder', (ctx) => setReminderHandler.handle(ctx));

@@ -47,7 +47,7 @@ class CallbackHandler implements Handler {
     return !!user;
   }
 
-  async updateUserWords(id: number, writing: string) {
+  async updateUserWords(id: number, writing: string): Promise<void> {
     const result = await User.updateOne(
       {
         id: id,

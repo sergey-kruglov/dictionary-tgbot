@@ -19,6 +19,8 @@ async function run() {
 
   bot.launch().catch((err) => console.log(err));
   Scheduler.start(bot);
+
+  console.log('Bot started');
 }
 
 run().catch((err) => {
