@@ -9,6 +9,7 @@ import {
 } from '../common/utils';
 import { Handler } from '../interfaces/handler';
 import { RapidApiResponse, Result } from '../interfaces/rapid-api-response';
+import { Actions } from '../lib/actions';
 import { Errors } from '../lib/errors';
 import { Settings, Word } from '../models';
 import { IWord, IWordDefinition } from '../models/word';
@@ -102,8 +103,11 @@ class MessageHandler implements Handler {
       reply_markup: {
         inline_keyboard: [
           [
-            { text: 'Yes', callback_data: `yes:${word.writing}` },
-            { text: 'No', callback_data: 'no' },
+            {
+              text: 'Yes',
+              callback_data: `${Actions.addWord};yes:${word.writing}`,
+            },
+            { text: 'No', callback_data: `${Actions.addWord};no` },
           ],
         ],
       },

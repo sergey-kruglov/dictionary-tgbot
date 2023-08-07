@@ -1,5 +1,6 @@
 import { CallbackCtx } from '../common/types';
 import { Handler } from '../interfaces/handler';
+import { Actions } from '../lib/actions';
 import { User, Word } from '../models';
 
 /**
@@ -11,10 +12,17 @@ class CallbackHandler implements Handler {
 
     const { data, message, from } = ctx.update.callback_query;
     const messageId = message?.message_id;
-    const [action, writing] = data.split(':');
+    const [action, value] = data.split(';');
+
+    if (!Actions[action]) {
+      await ctx.deleteMessage(messageId);
+      return;
+    }
+
+    const [key, writing] = value.split(':');
 
     // We don't need to keep the message
-    if (!messageId || action === 'no') {
+    if (!messageId || key === 'no') {
       await ctx.deleteMessage(messageId);
       return;
     }
