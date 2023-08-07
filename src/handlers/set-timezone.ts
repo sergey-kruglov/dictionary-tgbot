@@ -1,5 +1,6 @@
 import * as momentTz from 'moment-timezone';
 import { CommandCtx } from '../common/types';
+import { getCommandTextOrFail } from '../common/utils';
 import { Handler } from '../interfaces/handler';
 import { Errors } from '../lib/errors';
 import { User } from '../models';
@@ -16,12 +17,13 @@ class SetTimeZoneHandler implements Handler {
     }
 
     const { from, text } = ctx.update.message;
+    const timeZone = getCommandTextOrFail(text);
     const timeZones = momentTz.tz.names();
-    if (!timeZones.includes(text)) {
+    if (!timeZones.includes(timeZone)) {
       await ctx.reply(Errors.INCORRECT_FORMAT);
     }
 
-    await this.setUserTimeZone(ctx, from.id, text);
+    await this.setUserTimeZone(ctx, from.id, timeZone);
   }
 
   private async setUserTimeZone(
