@@ -1,5 +1,7 @@
+import { Actions } from '../lib/actions';
 import { Errors } from '../lib/errors';
 import { IWord, IWordDefinition } from '../models/word';
+import { CommandCtx, MessageCtx } from './types';
 
 export function prepareMarkdown(word: IWord): string {
   let markdown = `*${word.writing}* \\- _${word.pronunciation}_\n\n`;
@@ -87,4 +89,24 @@ export function validateWordOrFail(str: string): void {
   if (!str.match(/^[a-z]+$/gi)) {
     throw new Error(Errors.ONLY_LETTERS_ALLOWED);
   }
+}
+
+export async function addWordReply(
+  ctx: MessageCtx | CommandCtx,
+  word: IWord
+): Promise<void> {
+  await ctx.replyWithMarkdownV2(prepareMarkdown(word));
+  await ctx.reply(`Do you want to save the word?`, {
+    reply_markup: {
+      inline_keyboard: [
+        [
+          {
+            text: 'Yes',
+            callback_data: `${Actions.addWord};yes:${word.writing}`,
+          },
+          { text: 'No', callback_data: `${Actions.addWord};no` },
+        ],
+      ],
+    },
+  });
 }

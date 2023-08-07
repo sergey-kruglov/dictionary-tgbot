@@ -4,6 +4,7 @@ import { callbackHandler } from './callback';
 import { helpHandler } from './help';
 import { listTimeZonesHandler } from './list-timezones';
 import { messageHandler } from './message';
+import { randomWordHandler } from './random-word';
 import { removeWordHandler } from './remove-word';
 import { setIntervalHandler } from './set-interval';
 import { setReminderHandler } from './set-reminder';
@@ -15,6 +16,7 @@ import { startHandler } from './start';
 export function configureHandlers(bot: Telegraf) {
   bot.use(exceptionMiddleware);
   bot.command('start', (ctx) => startHandler.handle(ctx));
+  bot.command('randomWord', (ctx) => randomWordHandler.handle(ctx));
   bot.command('removeWord', (ctx) => removeWordHandler.handle(ctx));
   bot.command('setReminder', (ctx) => setReminderHandler.handle(ctx));
   bot.command('setTimeFrame', (ctx) => setTimeFrameHandler.handle(ctx));

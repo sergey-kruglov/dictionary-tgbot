@@ -3,13 +3,12 @@ import axios from 'axios';
 import { appConfig } from '../common/config';
 import { MessageCtx } from '../common/types';
 import {
+  addWordReply,
   getWordOrFail,
-  prepareMarkdown,
   validateWordOrFail,
 } from '../common/utils';
 import { Handler } from '../interfaces/handler';
 import { RapidApiResponse, Result } from '../interfaces/rapid-api-response';
-import { Actions } from '../lib/actions';
 import { Errors } from '../lib/errors';
 import { Settings, Word } from '../models';
 import { IWord, IWordDefinition } from '../models/word';
@@ -98,20 +97,7 @@ class MessageHandler implements Handler {
   }
 
   private async reply(ctx: MessageCtx, word: IWord): Promise<void> {
-    await ctx.replyWithMarkdownV2(prepareMarkdown(word));
-    await ctx.reply(`Do you want to save the word?`, {
-      reply_markup: {
-        inline_keyboard: [
-          [
-            {
-              text: 'Yes',
-              callback_data: `${Actions.addWord};yes:${word.writing}`,
-            },
-            { text: 'No', callback_data: `${Actions.addWord};no` },
-          ],
-        ],
-      },
-    });
+    await addWordReply(ctx, word);
   }
 }
 
