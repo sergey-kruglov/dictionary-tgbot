@@ -18,10 +18,13 @@ class SetIntervalHandler implements Handler {
     const interval = getCommandTextOrFail(text);
     validateIntOrFail(interval);
 
-    const reminderInterval = parseInt(interval);
-    await User.updateOne({ id: from.id }, { $set: { reminderInterval } });
+    const reminderIntervalMinutes = parseInt(interval);
+    await User.updateOne(
+      { id: from.id },
+      { $set: { reminderIntervalMinutes } }
+    );
 
-    await ctx.reply(`Your interval is now: ${reminderInterval}`);
+    await ctx.reply(`Your interval is now: ${reminderIntervalMinutes}`);
   }
 }
 
