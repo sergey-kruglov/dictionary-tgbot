@@ -3,8 +3,18 @@ import * as cron from 'node-cron';
 import { Telegraf } from 'telegraf';
 import { prepareMarkdown } from './common/utils';
 import { User } from './models';
-import { IUser } from './models/user';
 import { IWord } from './models/word';
+
+interface AggregatedUser {
+  _id: string;
+  chatId: number;
+  word: IWord[];
+  nextReminderDate: string;
+  reminderIntervalMinutes: number;
+  reminderStartTime: string;
+  reminderEndTime: string;
+  timeZone: string;
+}
 
 export class Scheduler {
   public static start(bot: Telegraf): void {
@@ -23,16 +33,7 @@ export class Scheduler {
       const limit = 500;
 
       for (let count = 0; count < usersCount; count += 500) {
-        const users: {
-          _id: string;
-          chatId: number;
-          word: IWord[];
-          nextReminderDate: string;
-          reminderIntervalMinutes: number;
-          reminderStartTime: string;
-          reminderEndTime: string;
-          timeZone: string;
-        }[] = await User.aggregate([
+        const users: AggregatedUser[] = await User.aggregate([
           {
             $match: {
               nextReminderDate: { $lte: date },
@@ -90,11 +91,7 @@ export class Scheduler {
           const endHours = Number(endHoursStr);
           const endMinutes = Number(endMinutesStr);
 
-          const nextReminderDate = moment(user.nextReminderDate).add(
-            user.reminderIntervalMinutes,
-            'minutes'
-          );
-          // const nextReminderDate: moment.Moment = this.updateOutdatedDate(user);
+          const nextReminderDate: moment.Moment = this.updateOutdatedDate(user);
 
           const startDate = moment
             .tz(user.timeZone)
@@ -105,20 +102,24 @@ export class Scheduler {
 
           // send next day if not between time frame
           if (!nextReminderDate.isBetween(startDate, endDate)) {
-            nextReminderDate
-              .add(1, 'day')
-              .set({ hours: startHours, minutes: startMinutes });
+            nextReminderDate.add(1, 'day').set({
+              hours: startHours,
+              minutes: startMinutes,
+              seconds: 0,
+              milliseconds: 0,
+            });
           }
 
-          messagePromises.push(async () => {
+          const updatePromise = async () => {
             await bot.telegram.sendMessage(user.chatId, prepareMarkdown(word), {
               parse_mode: 'MarkdownV2',
             });
-            await User.updateOne({
-              _id: user._id,
-              nextReminderDate: nextReminderDate.toDate(),
-            });
-          });
+            await User.updateOne(
+              { _id: user._id },
+              { $set: { nextReminderDate: nextReminderDate.toDate() } }
+            );
+          };
+          messagePromises.push(updatePromise);
         }
 
         await Promise.all(messagePromises);
@@ -127,17 +128,17 @@ export class Scheduler {
     });
   }
 
-  updateOutdatedDate(user: IUser): moment.Moment {
-    const nextReminderDate = moment(user.nextReminderDate).add(
-      user.reminderIntervalMinutes,
-      'minutes'
-    );
-
+  static updateOutdatedDate(user: AggregatedUser): moment.Moment {
+    const nextReminderDate = moment(user.nextReminderDate);
     const currentMoment = moment();
-    while (nextReminderDate.isBefore(currentMoment)) {
+
+    while (nextReminderDate.isBefore(currentMoment, 'minutes')) {
       nextReminderDate.add(user.reminderIntervalMinutes, 'minutes');
     }
 
-    return nextReminderDate;
+    return nextReminderDate.set({
+      seconds: 0,
+      milliseconds: 0,
+    });
   }
 }
