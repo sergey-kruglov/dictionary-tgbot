@@ -2,19 +2,8 @@ import moment from 'moment-timezone';
 import * as cron from 'node-cron';
 import { Telegraf } from 'telegraf';
 import { prepareMarkdown } from './common/utils';
+import { AggregatedUser } from './interfaces/aggregated-user';
 import { User } from './models';
-import { IWord } from './models/word';
-
-interface AggregatedUser {
-  _id: string;
-  chatId: number;
-  word: IWord[];
-  nextReminderDate: string;
-  reminderIntervalMinutes: number;
-  reminderStartTime: string;
-  reminderEndTime: string;
-  timeZone: string;
-}
 
 export class Scheduler {
   public static start(bot: Telegraf): void {
