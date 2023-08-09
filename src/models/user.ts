@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { model, Schema } from 'mongoose';
 
 export interface IUser {
@@ -28,7 +29,7 @@ const userSchema = new Schema<IUser>(
     timeZone: { type: String, default: 'Etc/UTC' },
     nextReminderDate: {
       type: Date,
-      default: () => Math.ceil(new Date().getTime() / 1000),
+      default: () => moment().add(1, 'hour').toDate(),
     },
     reminderIntervalMinutes: { type: Number, default: 60 },
     reminderStartTime: { type: String, default: '10:00' },
