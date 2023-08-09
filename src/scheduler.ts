@@ -1,7 +1,9 @@
+import moment from 'moment-timezone';
 import * as cron from 'node-cron';
 import { Telegraf } from 'telegraf';
 import { prepareMarkdown } from './common/utils';
 import { User } from './models';
+import { IUser } from './models/user';
 import { IWord } from './models/word';
 
 export class Scheduler {
@@ -9,47 +11,63 @@ export class Scheduler {
     // every minute
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     cron.schedule('* * * * *', async () => {
-      const usersCount = await User.count();
+      const date = new Date();
+      const usersCount = await User.count({
+        nextReminderDate: { $lte: date },
+        words: { $ne: [] },
+        reminderStatus: true,
+      });
       console.log(`Send scheduled messages. Count: ${usersCount}`);
 
       let skip = 0;
-      const limit = 100;
+      const limit = 500;
 
-      for (let count = 0; count < usersCount; count += 100) {
-        const users: { _id: string; chatId: number; word: IWord[] }[] =
-          await User.aggregate([
-            {
-              $match: {
-                nextReminderDate: { $lte: new Date() },
-                words: { $ne: [] },
-                reminderStatus: true,
-              },
+      for (let count = 0; count < usersCount; count += 500) {
+        const users: {
+          _id: string;
+          chatId: number;
+          word: IWord[];
+          nextReminderDate: string;
+          reminderIntervalMinutes: number;
+          reminderStartTime: string;
+          reminderEndTime: string;
+          timeZone: string;
+        }[] = await User.aggregate([
+          {
+            $match: {
+              nextReminderDate: { $lte: date },
+              words: { $ne: [] },
+              reminderStatus: true,
             },
-            { $sort: { _id: 1 } },
-            { $skip: skip },
-            { $limit: limit },
-            {
-              $project: {
-                chatId: 1,
-                word: {
-                  $arrayElemAt: [
-                    '$words',
-                    { $floor: { $multiply: ['$wordsCount', Math.random()] } },
-                  ],
-                },
+          },
+          { $sort: { _id: 1 } },
+          { $skip: skip },
+          { $limit: limit },
+          {
+            $project: {
+              chatId: 1,
+              word: {
+                $arrayElemAt: [
+                  '$words',
+                  { $floor: { $multiply: ['$wordsCount', Math.random()] } },
+                ],
               },
+              nextReminderDate: 1,
+              reminderIntervalMinutes: 1,
+              reminderStartTime: 1,
+              reminderEndTime: 1,
+              timeZone: 1,
             },
-            {
-              $lookup: {
-                from: 'words',
-                localField: 'word',
-                foreignField: 'writing',
-                as: 'word',
-              },
+          },
+          {
+            $lookup: {
+              from: 'words',
+              localField: 'word',
+              foreignField: 'writing',
+              as: 'word',
             },
-          ]);
-
-        // TODO add user next reminder date update
+          },
+        ]);
 
         const messagePromises = [];
         for (const user of users) {
@@ -59,16 +77,67 @@ export class Scheduler {
             return;
           }
 
-          messagePromises.push(
-            bot.telegram.sendMessage(user.chatId, prepareMarkdown(word), {
-              parse_mode: 'MarkdownV2',
-            })
+          if (new Date(user.nextReminderDate).getTime() > date.getTime()) {
+            continue;
+          }
+
+          const [startHoursStr, startMinutesStr] =
+            user.reminderStartTime.split(':');
+          const startHours = Number(startHoursStr);
+          const startMinutes = Number(startMinutesStr);
+
+          const [endHoursStr, endMinutesStr] = user.reminderEndTime.split(':');
+          const endHours = Number(endHoursStr);
+          const endMinutes = Number(endMinutesStr);
+
+          const nextReminderDate = moment(user.nextReminderDate).add(
+            user.reminderIntervalMinutes,
+            'minutes'
           );
+          // const nextReminderDate: moment.Moment = this.updateOutdatedDate(user);
+
+          const startDate = moment
+            .tz(user.timeZone)
+            .set({ hours: startHours, minutes: startMinutes });
+          const endDate = moment
+            .tz(user.timeZone)
+            .set({ hours: endHours, minutes: endMinutes });
+
+          // send next day if not between time frame
+          if (!nextReminderDate.isBetween(startDate, endDate)) {
+            nextReminderDate
+              .add(1, 'day')
+              .set({ hours: startHours, minutes: startMinutes });
+          }
+
+          messagePromises.push(async () => {
+            await bot.telegram.sendMessage(user.chatId, prepareMarkdown(word), {
+              parse_mode: 'MarkdownV2',
+            });
+            await User.updateOne({
+              _id: user._id,
+              nextReminderDate: nextReminderDate.toDate(),
+            });
+          });
         }
 
         await Promise.all(messagePromises);
         skip += limit;
       }
     });
+  }
+
+  updateOutdatedDate(user: IUser): moment.Moment {
+    const nextReminderDate = moment(user.nextReminderDate).add(
+      user.reminderIntervalMinutes,
+      'minutes'
+    );
+
+    const currentMoment = moment();
+    while (nextReminderDate.isBefore(currentMoment)) {
+      nextReminderDate.add(user.reminderIntervalMinutes, 'minutes');
+    }
+
+    return nextReminderDate;
   }
 }
