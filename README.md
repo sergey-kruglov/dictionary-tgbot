@@ -10,5 +10,5 @@ Telegram bot that helps to remember definitions of words.
 - [x] Add random word request
 - [x] Remove words
 - [x] Add timezones
-- [ ] Add scheduling
-- [ ] Words reminder
+- [x] Add scheduling
+- [x] Words reminder
