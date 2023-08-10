@@ -67,10 +67,6 @@ export class Scheduler {
             return;
           }
 
-          if (new Date(user.nextReminderDate).getTime() > date.getTime()) {
-            continue;
-          }
-
           const [startHoursStr, startMinutesStr] =
             user.reminderStartTime.split(':');
           const startHours = Number(startHoursStr);
@@ -108,7 +104,7 @@ export class Scheduler {
               { $set: { nextReminderDate: nextReminderDate.toDate() } }
             );
           };
-          messagePromises.push(updatePromise);
+          messagePromises.push(updatePromise());
         }
 
         await Promise.all(messagePromises);
