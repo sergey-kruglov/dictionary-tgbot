@@ -9,6 +9,8 @@ import { User } from '../models';
  * For example, we send notifications from 9:00 till 22:00.
  */
 class SetTimeFrameHandler implements Handler {
+  private readonly _usageExample = '/settimeframe 10:00-20:00';
+
   async handle(ctx: CommandCtx) {
     if (!('text' in ctx.update.message)) {
       await ctx.deleteMessage(ctx.message.message_id);
@@ -16,9 +18,14 @@ class SetTimeFrameHandler implements Handler {
     }
 
     const { from, text } = ctx.update.message;
-    const [startTime, endTime] = getCommandWordsOrFail(text, 2);
-    validateTimeOrFail(startTime);
-    validateTimeOrFail(endTime);
+    const [startTime, endTime] = getCommandWordsOrFail(
+      text,
+      2,
+      this._usageExample
+    );
+
+    validateTimeOrFail(startTime, this._usageExample);
+    validateTimeOrFail(endTime, this._usageExample);
 
     await User.updateOne({ id: from.id }, { $set: { startTime, endTime } });
     await ctx.reply(`Your time frame is now: ${startTime}-${endTime}`);

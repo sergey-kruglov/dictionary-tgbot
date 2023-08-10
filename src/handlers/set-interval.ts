@@ -8,6 +8,8 @@ import { User } from '../models';
  * Set interval of repetition. For example, we send 1 word in 40 min.
  */
 class SetIntervalHandler implements Handler {
+  private readonly _usageExample = '/setinterval 60';
+
   async handle(ctx: CommandCtx) {
     if (!('text' in ctx.update.message)) {
       await ctx.deleteMessage(ctx.message.message_id);
@@ -16,7 +18,7 @@ class SetIntervalHandler implements Handler {
 
     const { from, text } = ctx.update.message;
     const interval = getCommandTextOrFail(text);
-    validateIntOrFail(interval);
+    validateIntOrFail(interval, this._usageExample);
 
     const reminderIntervalMinutes = parseInt(interval);
     await User.updateOne(

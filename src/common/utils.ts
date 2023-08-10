@@ -55,7 +55,8 @@ export function getCommandTextOrFail(str: string): string {
 
 export function getCommandWordsOrFail(
   str: string,
-  wordsCount: number
+  wordsCount: number,
+  error = ''
 ): string[] {
   const parts = str.split(/\s/gi);
   const words = parts.slice(1, 1 + wordsCount);
@@ -63,31 +64,31 @@ export function getCommandWordsOrFail(
   // If sliced words count not match the length of parts (except command word),
   // throw an INCORRECT_FORMAT exception
   if (words.length > parts.length - 1) {
-    throw new Error(Errors.INCORRECT_FORMAT);
+    throw new Error(`${Errors.INCORRECT_FORMAT}. ${error}`);
   }
 
   return words;
 }
 
-export function validateIntOrFail(str: string): void {
+export function validateIntOrFail(str: string, error = ''): void {
   if (!str.match(/^[0-9]+$/gi)) {
-    throw new Error(Errors.ONLY_NUMBERS_ALLOWED);
+    throw new Error(`${Errors.ONLY_NUMBERS_ALLOWED}. ${error}`);
   }
 }
 
-export function validateTimeOrFail(str: string): void {
+export function validateTimeOrFail(str: string, error = ''): void {
   const [first, last] = str.split(':');
   const hours = parseInt(first);
   const minutes = parseInt(last);
 
   if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
-    throw new Error(Errors.INCORRECT_FORMAT);
+    throw new Error(`${Errors.INCORRECT_FORMAT}. ${error}`);
   }
 }
 
-export function validateWordOrFail(str: string): void {
+export function validateWordOrFail(str: string, error = ''): void {
   if (!str.match(/^[a-z]+$/gi)) {
-    throw new Error(Errors.ONLY_LETTERS_ALLOWED);
+    throw new Error(`${Errors.ONLY_LETTERS_ALLOWED}. ${error}`);
   }
 }
 

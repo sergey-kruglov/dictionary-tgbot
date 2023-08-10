@@ -10,6 +10,8 @@ import { User } from '../models';
  * To properly calculate from and to dates, we need to set the timezone.
  */
 class SetTimeZoneHandler implements Handler {
+  private readonly _usageExample = '/settimezone Europe/Helsinki';
+
   async handle(ctx: CommandCtx): Promise<void> {
     if (!('text' in ctx.update.message)) {
       await ctx.deleteMessage(ctx.message.message_id);

@@ -8,6 +8,8 @@ import { User } from '../models';
  * Set interval of repetition. For example, we send 1 word in 40 min.
  */
 class RemoveWordHandler implements Handler {
+  private readonly _usageExample = '/removeword apple';
+
   async handle(ctx: CommandCtx) {
     if (!('text' in ctx.update.message)) {
       await ctx.deleteMessage(ctx.message.message_id);
@@ -16,7 +18,7 @@ class RemoveWordHandler implements Handler {
 
     const { from, text } = ctx.update.message;
     const word = getCommandTextOrFail(text);
-    validateWordOrFail(word);
+    validateWordOrFail(word, this._usageExample);
 
     await User.updateOne(
       { id: from.id },
