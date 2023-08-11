@@ -60,6 +60,9 @@ export function getCommandWordsOrFail(
 ): string[] {
   const parts = str.split(/\s/gi);
   const words = parts.slice(1, 1 + wordsCount);
+  if (!words.length) {
+    throw new Error(`${Errors.INCORRECT_FORMAT}. ${error}`);
+  }
 
   // If sliced words count not match the length of parts (except command word),
   // throw an INCORRECT_FORMAT exception
