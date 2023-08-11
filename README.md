@@ -7,3 +7,4 @@ Telegram bot that helps to remember definitions of words.
 ## TODO
 
 - [ ] Refactor commands
+- [ ] Fix issue with scheduler
