@@ -44,10 +44,10 @@ export function getWordOrFail(str: string): string {
   return text.toLowerCase();
 }
 
-export function getCommandTextOrFail(str: string): string {
+export function getCommandTextOrFail(str: string, error = ''): string {
   const [, text, ...rest] = str.split(/\s/gi);
   if (!text || rest.length) {
-    throw new Error(Errors.INCORRECT_FORMAT);
+    throw new Error(`${Errors.INCORRECT_FORMAT}. ${error}`);
   }
 
   return text;

@@ -17,7 +17,7 @@ class SetIntervalHandler implements Handler {
     }
 
     const { from, text } = ctx.update.message;
-    const interval = getCommandTextOrFail(text);
+    const interval = getCommandTextOrFail(text, this._usageExample);
     validateIntOrFail(interval, this._usageExample);
 
     const reminderIntervalMinutes = parseInt(interval);

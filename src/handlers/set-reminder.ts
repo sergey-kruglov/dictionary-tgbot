@@ -23,7 +23,7 @@ class SetReminderHandler implements Handler {
   }
 
   private getStatus(text: string): string {
-    const status = getCommandTextOrFail(text);
+    const status = getCommandTextOrFail(text, this._usageExample);
     if (!['on', 'off'].includes(status)) {
       throw new Error(Errors.INCORRECT_FORMAT);
     }

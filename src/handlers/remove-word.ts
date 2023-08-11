@@ -17,7 +17,7 @@ class RemoveWordHandler implements Handler {
     }
 
     const { from, text } = ctx.update.message;
-    const word = getCommandTextOrFail(text);
+    const word = getCommandTextOrFail(text, this._usageExample);
     validateWordOrFail(word, this._usageExample);
 
     await User.updateOne(

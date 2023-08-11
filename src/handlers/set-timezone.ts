@@ -19,7 +19,7 @@ class SetTimeZoneHandler implements Handler {
     }
 
     const { from, text } = ctx.update.message;
-    const timeZone = getCommandTextOrFail(text);
+    const timeZone = getCommandTextOrFail(text, this._usageExample);
     const timeZones = momentTz.tz.names();
     if (!timeZones.includes(timeZone)) {
       await ctx.reply(Errors.INCORRECT_FORMAT);
