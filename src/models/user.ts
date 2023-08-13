@@ -13,6 +13,7 @@ export interface IUser {
   reminderStartTime: string;
   reminderEndTime: string;
   reminderStatus: boolean;
+  lastAction?: string;
   username?: string;
   firstName?: string;
   lastName?: string;
@@ -35,6 +36,7 @@ const userSchema = new Schema<IUser>(
     reminderStartTime: { type: String, default: '10:00' },
     reminderEndTime: { type: String, default: '20:00' },
     reminderStatus: { type: Boolean, default: true },
+    lastAction: { type: String },
     username: { type: String },
     firstName: { type: String },
     lastName: { type: String },
