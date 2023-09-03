@@ -14,7 +14,7 @@ class CallbackHandler implements Handler {
     const messageId = message?.message_id;
     const [action, value] = data.split(';');
 
-    if (!Actions[action]) {
+    if (!Actions[action as Actions]) {
       await ctx.deleteMessage(messageId);
       return;
     }

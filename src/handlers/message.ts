@@ -5,6 +5,7 @@ import { MessageCtx } from '../common/types';
 import {
   addWordReply,
   getWordOrFail,
+  throwError,
   validateWordOrFail,
 } from '../common/utils';
 import { Handler } from '../interfaces/handler';
@@ -58,7 +59,7 @@ class MessageHandler implements Handler {
       { $inc: { requestCount: 1 } }
     );
     if (!settings.modifiedCount) {
-      throw new Error(Errors.REQUEST_LIMIT_EXCEEDED);
+      throwError(Errors.REQUEST_LIMIT_EXCEEDED);
     }
   }
 

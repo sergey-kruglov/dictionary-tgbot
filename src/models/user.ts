@@ -1,5 +1,6 @@
 import moment from 'moment';
 import { model, Schema } from 'mongoose';
+import { Actions } from '../lib/actions';
 
 export interface IUser {
   id: number;
@@ -13,7 +14,7 @@ export interface IUser {
   reminderStartTime: string;
   reminderEndTime: string;
   reminderStatus: boolean;
-  lastAction?: string;
+  lastAction?: Actions;
   username?: string;
   firstName?: string;
   lastName?: string;

@@ -1,5 +1,5 @@
 import { CommandCtx } from '../common/types';
-import { getCommandTextOrFail } from '../common/utils';
+import { getCommandTextOrFail, throwError } from '../common/utils';
 import { Handler } from '../interfaces/handler';
 import { Errors } from '../lib/errors';
 import { User } from '../models';
@@ -9,7 +9,7 @@ import { User } from '../models';
  * Enable or disable word reminders.
  */
 class SetReminderHandler implements Handler {
-  private readonly _usageExample = '/setreminder on';
+  private readonly _usageExample = '/setreminder on/off';
 
   async handle(ctx: CommandCtx): Promise<void> {
     if (!('text' in ctx.update.message)) {
@@ -25,7 +25,7 @@ class SetReminderHandler implements Handler {
   private getStatus(text: string): string {
     const status = getCommandTextOrFail(text, this._usageExample);
     if (!['on', 'off'].includes(status)) {
-      throw new Error(Errors.INCORRECT_FORMAT);
+      throwError(Errors.INCORRECT_FORMAT, this._usageExample);
     }
 
     return status;
