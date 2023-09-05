@@ -1,5 +1,5 @@
 import { CommandCtx } from '../common/types';
-import { Handler } from '../interfaces/handler';
+import { Command } from '../interfaces/handler';
 import { Actions } from '../lib/actions';
 import { User } from '../models';
 
@@ -7,13 +7,14 @@ import { User } from '../models';
  * Handle /setReminder command.
  * Enable or disable word reminders.
  */
-class SetReminderCommand implements Handler {
+class SetReminderCommand implements Command {
+  readonly name = 'setreminder';
+
   private readonly _usageExample = '/setreminder on/off';
 
   async handle(ctx: CommandCtx): Promise<void> {
     const { from } = ctx.update.message;
 
-    console.log('asdas');
     await User.updateOne(
       { id: from.id },
       { $set: { lastAction: Actions.setReminder } }
@@ -32,4 +33,4 @@ class SetReminderCommand implements Handler {
   }
 }
 
-export const setReminderHandler = new SetReminderCommand();
+export const setReminderCommand = new SetReminderCommand();

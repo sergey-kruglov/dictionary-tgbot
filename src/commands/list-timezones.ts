@@ -1,12 +1,14 @@
 import * as momentTz from 'moment-timezone';
 import { CommandCtx } from '../common/types';
-import { Handler } from '../interfaces/handler';
+import { Command } from '../interfaces/handler';
 
 /**
  * Handle /listTimeZones command.
  * To properly set timezone, we need to know the timezones list.
  */
-class ListTimeZonesHandler implements Handler {
+class ListTimeZonesCommand implements Command {
+  readonly name = 'listtimezones';
+
   async handle(ctx: CommandCtx): Promise<void> {
     if (!('text' in ctx.update.message)) {
       await ctx.deleteMessage(ctx.message.message_id);
@@ -20,4 +22,4 @@ class ListTimeZonesHandler implements Handler {
   }
 }
 
-export const listTimeZonesHandler = new ListTimeZonesHandler();
+export const listTimeZonesHandler = new ListTimeZonesCommand();

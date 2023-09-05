@@ -1,7 +1,7 @@
 import * as momentTz from 'moment-timezone';
 import { CommandCtx } from '../common/types';
 import { getCommandTextOrFail } from '../common/utils';
-import { Handler } from '../interfaces/handler';
+import { Command } from '../interfaces/handler';
 import { Errors } from '../lib/errors';
 import { User } from '../models';
 
@@ -9,7 +9,9 @@ import { User } from '../models';
  * Handle /setTimeZone command.
  * To properly calculate from and to dates, we need to set the timezone.
  */
-class SetTimeZoneHandler implements Handler {
+class SetTimeZoneCommand implements Command {
+  readonly name = 'settimezone';
+
   private readonly _usageExample = '/settimezone Europe/Helsinki';
 
   async handle(ctx: CommandCtx): Promise<void> {
@@ -38,4 +40,4 @@ class SetTimeZoneHandler implements Handler {
   }
 }
 
-export const setTimeZoneHandler = new SetTimeZoneHandler();
+export const setTimeZoneCommand = new SetTimeZoneCommand();

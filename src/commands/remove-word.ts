@@ -1,13 +1,15 @@
 import { CommandCtx } from '../common/types';
 import { getCommandTextOrFail, validateWordOrFail } from '../common/utils';
-import { Handler } from '../interfaces/handler';
+import { Command } from '../interfaces/handler';
 import { User } from '../models';
 
 /**
  * Handle /setInterval command.
  * Set interval of repetition. For example, we send 1 word in 40 min.
  */
-class RemoveWordHandler implements Handler {
+class RemoveWordCommand implements Command {
+  readonly name = 'removeword';
+
   private readonly _usageExample = '/removeword apple';
 
   async handle(ctx: CommandCtx) {
@@ -32,4 +34,4 @@ class RemoveWordHandler implements Handler {
   }
 }
 
-export const removeWordHandler = new RemoveWordHandler();
+export const removeWordCommand = new RemoveWordCommand();

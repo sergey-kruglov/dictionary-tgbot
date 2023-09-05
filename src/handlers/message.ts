@@ -8,14 +8,14 @@ import {
   throwError,
   validateWordOrFail,
 } from '../common/utils';
-import { Handler } from '../interfaces/handler';
 import { RapidApiResponse, Result } from '../interfaces/rapid-api-response';
 import { Errors } from '../lib/errors';
 import { Settings, Word } from '../models';
 import { IWord, IWordDefinition } from '../models/word';
 
-class MessageHandler implements Handler {
+class MessageHandler {
   async handle(ctx: MessageCtx): Promise<void> {
+    console.log('message');
     if (!('text' in ctx.update.message)) {
       await ctx.deleteMessage(ctx.message.message_id);
       return;

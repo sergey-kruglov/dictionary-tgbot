@@ -1,6 +1,6 @@
 import { User as TgUser } from 'telegraf/typings/core/types/typegram';
 import { CommandCtx } from '../common/types';
-import { Handler } from '../interfaces/handler';
+import { Command } from '../interfaces/handler';
 import { User } from '../models';
 
 /**
@@ -8,7 +8,9 @@ import { User } from '../models';
  * Create a user or update existing one,
  * reply with Welcome message.
  */
-class StartHandler implements Handler {
+class StartCommand implements Command {
+  readonly name = 'start';
+
   async handle(ctx: CommandCtx): Promise<void> {
     const { from, chat } = ctx.update.message;
     await this.createOrUpdateUser(from, chat.id);
@@ -41,4 +43,4 @@ class StartHandler implements Handler {
   }
 }
 
-export const startHandler = new StartHandler();
+export const startCommand = new StartCommand();

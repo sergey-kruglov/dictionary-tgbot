@@ -1,6 +1,6 @@
 import { CommandCtx } from '../common/types';
 import { getCommandWordsOrFail, validateTimeOrFail } from '../common/utils';
-import { Handler } from '../interfaces/handler';
+import { Command } from '../interfaces/handler';
 import { User } from '../models';
 
 /**
@@ -8,7 +8,9 @@ import { User } from '../models';
  * Set time frame of repetition.
  * For example, we send notifications from 9:00 till 22:00.
  */
-class SetTimeFrameHandler implements Handler {
+class SetTimeFrameCommand implements Command {
+  readonly name = 'settimeframe';
+
   private readonly _usageExample = '/settimeframe 10:00-20:00';
 
   async handle(ctx: CommandCtx) {
@@ -32,4 +34,4 @@ class SetTimeFrameHandler implements Handler {
   }
 }
 
-export const setTimeFrameHandler = new SetTimeFrameHandler();
+export const setTimeFrameCommand = new SetTimeFrameCommand();

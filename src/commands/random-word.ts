@@ -1,11 +1,13 @@
 /* eslint-disable no-useless-escape */
 import { CommandCtx } from '../common/types';
 import { addWordReply } from '../common/utils';
-import { Handler } from '../interfaces/handler';
+import { Command } from '../interfaces/handler';
 import { Word } from '../models';
 import { IWord } from '../models/word';
 
-class RandomWordHandler implements Handler {
+class RandomWordCommand implements Command {
+  readonly name = 'randomword';
+
   async handle(ctx: CommandCtx): Promise<void> {
     if (!('text' in ctx.update.message)) {
       await ctx.deleteMessage(ctx.message.message_id);
@@ -22,4 +24,4 @@ class RandomWordHandler implements Handler {
   }
 }
 
-export const randomWordHandler = new RandomWordHandler();
+export const randomWordCommand = new RandomWordCommand();

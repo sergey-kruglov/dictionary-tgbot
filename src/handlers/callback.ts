@@ -1,12 +1,11 @@
 import { CallbackCtx } from '../common/types';
-import { Handler } from '../interfaces/handler';
 import { Actions } from '../lib/actions';
 import { User, Word } from '../models';
 
 /**
  * Handle "Save word?" button clicks
  */
-class CallbackHandler implements Handler {
+class CallbackHandler {
   async handle(ctx: CallbackCtx): Promise<void> {
     if (!('data' in ctx.update.callback_query)) return;
 
