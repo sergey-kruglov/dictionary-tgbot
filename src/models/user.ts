@@ -10,7 +10,7 @@ export interface IUser {
   wordsCount: number;
   timeZone: string;
   nextReminderDate: Date;
-  reminderIntervalMinutes: number; // minutes
+  reminderIntervalMinutes: number;
   reminderStartTime: string;
   reminderEndTime: string;
   reminderStatus: boolean;
