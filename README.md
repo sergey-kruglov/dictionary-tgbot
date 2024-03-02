@@ -8,3 +8,4 @@ Telegram bot that helps to remember definitions of words.
 
 - [ ] Refactor commands
 - [ ] Fix issue with scheduler
+- [ ] Add automatic words requester to fill DB
