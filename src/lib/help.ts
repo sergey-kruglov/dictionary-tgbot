@@ -1,6 +1,8 @@
 export const helpText = `
 Command list:
 
+/help - Get help (help)
+/cancel - Cancel current command
 /randomword - Get random word (random word)
 /removeword - Remove a word from saved words (removeWord hello)
 /setreminder - Turn on/off reminders (setReminder on)
@@ -8,7 +10,6 @@ Command list:
 /setinterval - Set interval in minutes for reminders (setInterval 30)
 /settimezone - Set timezone to send reminders in correct time (setTimeZone Europe/Tallinn)
 /listtimezones - List available timezones (listTimeZones)
-/help - Get help (help)
 
 You can find the source code of this bot here: https://github.com/sergey-kruglov/dictionary-tgbot
 

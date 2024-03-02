@@ -9,6 +9,7 @@ import { Scheduler } from './scheduler';
 async function run() {
   const bot = new Telegraf(appConfig.telegramToken);
   configureHandlers(bot);
+  // Enable graceful stop
   configureShutdown(bot);
 
   await mongoose.connect(appConfig.mongodbUri);

@@ -36,7 +36,6 @@ class StartCommand implements Command {
     );
   }
 
-  // Reply with Welcome message
   private async reply(ctx: CommandCtx, from: TgUser): Promise<void> {
     const name = from.first_name || from.username || from.id;
     await ctx.reply(`Welcome, ${name}. Write /help to get more info`);

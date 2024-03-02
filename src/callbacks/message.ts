@@ -51,7 +51,7 @@ class MessageCallback implements Callback {
   }
 
   async updateUserWords(id: number, writing: string): Promise<void> {
-    const result = await User.updateOne(
+    const { matchedCount } = await User.updateOne(
       {
         id: id,
         writing: { $nin: [writing] },
@@ -60,8 +60,8 @@ class MessageCallback implements Callback {
     );
 
     // Update statistics of words usage
-    // TODO add statistics of requested words + words in remember queue
-    if (result.matchedCount) {
+    // TODO add statistics of requested words + words in remember list
+    if (matchedCount) {
       await Word.updateOne({ writing }, { $inc: { savedCount: 1 } });
     }
   }

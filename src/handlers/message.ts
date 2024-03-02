@@ -54,11 +54,12 @@ class MessageHandler {
       { $set: { counterResetDate: new Date(nextDay), requestCount: 0 } }
     );
 
-    const settings = await Settings.updateOne(
-      { requestCount: { $lt: 2500 } }, // free tier is 2500 req/day
+    const { modifiedCount } = await Settings.updateOne(
+      // API free tier is 2500 req/day
+      { requestCount: { $lt: 2500 } },
       { $inc: { requestCount: 1 } }
     );
-    if (!settings.modifiedCount) {
+    if (!modifiedCount) {
       throwError(Errors.REQUEST_LIMIT_EXCEEDED);
     }
   }
