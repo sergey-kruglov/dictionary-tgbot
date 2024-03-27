@@ -1,5 +1,6 @@
 import { Telegraf } from 'telegraf';
 
+import { cancelCommand } from '../commands/cancel';
 import { helpCommand } from '../commands/help';
 import { listTimeZonesHandler } from '../commands/list-timezones';
 import { randomWordCommand } from '../commands/random-word';
@@ -26,6 +27,7 @@ const commands: Command[] = [
   setTimeZoneCommand,
   listTimeZonesHandler,
   helpCommand,
+  cancelCommand,
 ];
 
 // Configure middleware, commands and callbacks

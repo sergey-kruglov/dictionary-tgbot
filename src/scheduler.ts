@@ -8,47 +8,41 @@ import { IWord } from './models/word';
 
 export class Scheduler {
   public static start(bot: Telegraf): void {
-    // every minute
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    cron.schedule('* * * * *', async () => {
-      try {
-        const date = new Date();
-        const usersCount = await User.count({
-          nextReminderDate: { $lte: date },
-          words: { $ne: [] },
-          reminderStatus: true,
-        });
-        console.log(`Send scheduled messages. Count: ${usersCount}`);
-
-        let skip = 0;
-        const limit = 500;
-
-        for (let count = 0; count < usersCount; count += 500) {
-          const users: AggregatedUser[] = await this.getUsers(
-            date,
-            skip,
-            limit
-          );
-
-          const messagePromises = [];
-          for (const user of users) {
-            const word = user.word?.[0];
-            if (!word) {
-              console.error('Word not found');
-              return;
-            }
-
-            const updatePromise = this.updateUser(bot, user, word);
-            messagePromises.push(updatePromise());
-          }
-
-          await Promise.all(messagePromises);
-          skip += limit;
-        }
-      } catch (err) {
-        console.log(err);
-      }
+    cron.schedule('* * * * *', () => {
+      this.execute(bot).catch((err) => console.log(err));
     });
+  }
+
+  static async execute(bot: Telegraf) {
+    const date = new Date();
+    const usersCount = await User.count({
+      nextReminderDate: { $lte: date },
+      words: { $ne: [] },
+      reminderStatus: true,
+    });
+    console.log(`Send scheduled messages. Count: ${usersCount}`);
+
+    let skip = 0;
+    const limit = 500;
+
+    for (let count = 0; count < usersCount; count += 500) {
+      const users: AggregatedUser[] = await this.getUsers(date, skip, limit);
+
+      const messagePromises = [];
+      for (const user of users) {
+        const word = user.word?.[0];
+        if (!word) {
+          console.error('Word not found');
+          return;
+        }
+
+        const updatePromise = this.updateUser(bot, user, word);
+        messagePromises.push(updatePromise());
+      }
+
+      await Promise.all(messagePromises);
+      skip += limit;
+    }
   }
 
   private static async getUsers(

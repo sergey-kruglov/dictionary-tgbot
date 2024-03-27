@@ -15,6 +15,8 @@ class MessageCallback implements Callback {
 
     const { data, message, from } = ctx.update.callback_query;
     const messageId = message?.message_id;
+    if (!messageId) return;
+
     const [action, value] = data.split(';');
 
     if (!Actions[action as Actions]) {
@@ -60,7 +62,6 @@ class MessageCallback implements Callback {
     );
 
     // Update statistics of words usage
-    // TODO add statistics of requested words + words in remember list
     if (matchedCount) {
       await Word.updateOne({ writing }, { $inc: { savedCount: 1 } });
     }

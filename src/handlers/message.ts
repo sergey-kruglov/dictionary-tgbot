@@ -9,8 +9,9 @@ import {
   validateWordOrFail,
 } from '../common/utils';
 import { RapidApiResponse, Result } from '../interfaces/rapid-api-response';
+import { Actions } from '../lib/actions';
 import { Errors } from '../lib/errors';
-import { Settings, Word } from '../models';
+import { Settings, User, Word } from '../models';
 import { IWord, IWordDefinition } from '../models/word';
 
 class MessageHandler {
@@ -22,6 +23,13 @@ class MessageHandler {
     }
 
     const { text } = ctx.update.message;
+
+    const activeCommand = await this.getActiveCommand(ctx.message.from.id);
+    if (activeCommand) {
+      // TODO handle active command
+      return;
+    }
+
     const writing = getWordOrFail(text);
     validateWordOrFail(writing);
 
@@ -35,6 +43,11 @@ class MessageHandler {
     const data = await this.getWordFromApi(writing);
     const newWord = await this.createNewWord(writing, data);
     await this.reply(ctx, newWord);
+  }
+
+  async getActiveCommand(userId: number): Promise<Actions | undefined> {
+    const user = await User.findOne({ id: userId });
+    return user?.activeCommand;
   }
 
   private async findWordInDB(writing: string): Promise<IWord | null> {
