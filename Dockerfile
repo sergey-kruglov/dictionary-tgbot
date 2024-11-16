@@ -5,6 +5,6 @@ USER deno
 
 COPY . .
 
-RUN deno cache ./src/
+RUN deno cache --allow-import ./src/main.ts
 
 CMD ["deno", "task", "start"]
