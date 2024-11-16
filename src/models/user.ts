@@ -1,6 +1,6 @@
-import moment from 'moment';
-import { model, Schema } from 'mongoose';
-import { Actions } from '../lib/actions';
+import moment from 'https://deno.land/x/momentjs@2.29.1-deno/mod.ts';
+import { model, Schema } from 'npm:mongoose@8.8.0';
+import { Actions } from '../lib/actions.ts';
 
 export interface IUser {
   id: number;

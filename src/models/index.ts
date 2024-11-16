@@ -1,3 +1,3 @@
-export { Settings } from './settings';
-export { User } from './user';
-export { Word } from './word';
+export { Settings } from './settings.ts';
+export { User } from './user.ts';
+export { Word } from './word.ts';

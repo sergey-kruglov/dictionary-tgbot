@@ -1,7 +1,7 @@
-import { CallbackCtx } from '../common/types';
-import { Callback } from '../interfaces/handler';
-import { Actions } from '../lib/actions';
-import { User, Word } from '../models';
+import { Context } from "https://deno.land/x/grammy@v1.31.3/mod.ts";
+import { Callback } from "../interfaces/handler.ts";
+import { Actions } from "../lib/actions.ts";
+import { User, Word } from "../models/index.ts";
 
 /**
  * Handle "Save word?" button clicks
@@ -9,26 +9,26 @@ import { User, Word } from '../models';
 class MessageCallback implements Callback {
   readonly action = Actions.addWord;
 
-  async handle(ctx: CallbackCtx): Promise<void> {
-    // if no callback data, skip it
-    if (!('data' in ctx.update.callback_query)) return;
+  async handle(ctx: Context): Promise<void> {
+    if (!ctx.callbackQuery) return;
+    const { data, message, from } = ctx.callbackQuery;
+    if (!data) return;
 
-    const { data, message, from } = ctx.update.callback_query;
     const messageId = message?.message_id;
     if (!messageId) return;
 
-    const [action, value] = data.split(';');
+    const [action, value] = data.split(";");
 
     if (!Actions[action as Actions]) {
-      await ctx.deleteMessage(messageId);
+      await ctx.deleteMessage();
       return;
     }
 
-    const [key, writing] = value.split(':');
+    const [key, writing] = value.split(":");
 
     // We don't need to keep the message
-    if (!messageId || key === 'no') {
-      await ctx.deleteMessage(messageId);
+    if (!messageId || key === "no") {
+      await ctx.deleteMessage();
       return;
     }
 
@@ -39,7 +39,7 @@ class MessageCallback implements Callback {
       await this.updateUserWords(from.id, writing);
     }
 
-    await ctx.deleteMessage(messageId);
+    await ctx.deleteMessage();
   }
 
   async isWordAlreadyExists(id: number, writing: string): Promise<boolean> {
@@ -47,7 +47,7 @@ class MessageCallback implements Callback {
       id,
       words: writing,
     })
-      .select('id')
+      .select("id")
       .lean();
     return !!user;
   }

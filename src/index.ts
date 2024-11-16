@@ -1,29 +1,31 @@
-import mongoose from 'mongoose';
-import { Telegraf } from 'telegraf';
-import { appConfig } from './common/config';
-import { configureShutdown } from './common/shutdown';
-import { configureHandlers } from './handlers';
-import { Settings } from './models';
-import { Scheduler } from './scheduler';
+import { Bot } from "https://deno.land/x/grammy@v1.31.3/mod.ts";
 
-async function run() {
-  const bot = new Telegraf(appConfig.telegramToken);
-  configureHandlers(bot);
-  // Enable graceful stop
-  configureShutdown(bot);
+import mongoose from "npm:mongoose@8.8.0";
+import { appConfig } from "./common/config.ts";
+import { configureHandlers } from "./handlers/index.ts";
+import { Settings } from "./models/index.ts";
+import { Scheduler } from "./scheduler.ts";
 
-  await mongoose.connect(appConfig.mongodbUri);
+async function initAppSettings() {
   const settings = await Settings.findOne();
   if (!settings) {
     await Settings.create({ requestCount: 0, counterResetDate: new Date() });
   }
-
-  bot.launch().catch((err) => console.log(err));
-  Scheduler.start(bot);
-
-  console.log('Bot started');
 }
 
-run().catch((err) => {
-  throw err;
-});
+async function run() {
+  console.log({ appConfig });
+  const bot = new Bot(appConfig.telegramToken);
+
+  await mongoose.connect(appConfig.mongodbUri);
+  await initAppSettings();
+
+  configureHandlers(bot);
+
+  bot.start();
+  Scheduler.start(bot);
+
+  console.log("Bot started");
+}
+
+run();

@@ -1,7 +1,7 @@
-import { CommandCtx } from '../common/types';
-import { getCommandWordsOrFail, validateTimeOrFail } from '../common/utils';
-import { Command } from '../interfaces/handler';
-import { User } from '../models';
+import { Context } from "https://deno.land/x/grammy@v1.31.3/mod.ts";
+import { getCommandWordsOrFail, validateTimeOrFail } from "../common/utils.ts";
+import { Command } from "../interfaces/handler.ts";
+import { User } from "../models/index.ts";
 
 /**
  * Handle /setTimeFrame command.
@@ -9,17 +9,18 @@ import { User } from '../models';
  * For example, we send notifications from 9:00 till 22:00.
  */
 class SetTimeFrameCommand implements Command {
-  readonly name = 'settimeframe';
+  readonly name = "settimeframe";
 
-  private readonly _usageExample = '/settimeframe 10:00-20:00';
+  private readonly _usageExample = "/settimeframe 10:00-20:00";
 
-  async handle(ctx: CommandCtx) {
-    if (!('text' in ctx.update.message)) {
-      await ctx.deleteMessage(ctx.message.message_id);
+  async handle(ctx: Context) {
+    if (!ctx.message) return;
+    const { text, from } = ctx.message;
+    if (!text) {
+      await ctx.deleteMessage();
       return;
     }
 
-    const { from, text } = ctx.update.message;
     const [startTime, endTime] = getCommandWordsOrFail(
       text,
       2,

@@ -1,4 +1,4 @@
-import { model, Schema } from 'mongoose';
+import { model, Schema } from 'npm:mongoose@8.8.0';
 
 export interface IWordDefinition {
   definition: string;

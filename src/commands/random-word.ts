@@ -1,16 +1,17 @@
 /* eslint-disable no-useless-escape */
-import { CommandCtx } from '../common/types';
-import { addWordReply } from '../common/utils';
-import { Command } from '../interfaces/handler';
-import { Word } from '../models';
-import { IWord } from '../models/word';
+import { Context } from "https://deno.land/x/grammy@v1.31.3/mod.ts";
+import { addWordReply } from "../common/utils.ts";
+import { Command } from "../interfaces/handler.ts";
+import { Word } from "../models/index.ts";
+import { IWord } from "../models/word.ts";
 
 class RandomWordCommand implements Command {
-  readonly name = 'randomword';
+  readonly name = "randomword";
 
-  async handle(ctx: CommandCtx): Promise<void> {
-    if (!('text' in ctx.update.message)) {
-      await ctx.deleteMessage(ctx.message.message_id);
+  async handle(ctx: Context): Promise<void> {
+    if (!ctx.message) return;
+    if (!ctx.message.text) {
+      await ctx.deleteMessage();
       return;
     }
 
@@ -19,7 +20,7 @@ class RandomWordCommand implements Command {
     await this.reply(ctx, word);
   }
 
-  private async reply(ctx: CommandCtx, word: IWord): Promise<void> {
+  private async reply(ctx: Context, word: IWord): Promise<void> {
     await addWordReply(ctx, word);
   }
 }
