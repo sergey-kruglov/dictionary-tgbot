@@ -1,30 +1,31 @@
 /* eslint-disable no-useless-escape */
-import axios from 'axios';
-import { appConfig } from '../common/config';
-import { MessageCtx } from '../common/types';
+import { Context } from "https://deno.land/x/grammy@v1.31.3/mod.ts";
+import axios from "npm:axios@1.7.7";
+import { appConfig } from "../common/config.ts";
 import {
   addWordReply,
   getWordOrFail,
   throwError,
   validateWordOrFail,
-} from '../common/utils';
-import { RapidApiResponse, Result } from '../interfaces/rapid-api-response';
-import { Actions } from '../lib/actions';
-import { Errors } from '../lib/errors';
-import { Settings, User, Word } from '../models';
-import { IWord, IWordDefinition } from '../models/word';
+} from "../common/utils.ts";
+import { RapidApiResponse, Result } from "../interfaces/rapid-api-response.ts";
+import { Actions } from "../lib/actions.ts";
+import { Errors } from "../lib/errors.ts";
+import { Settings, User, Word } from "../models/index.ts";
+import { IWord, IWordDefinition } from "../models/word.ts";
 
 class MessageHandler {
-  async handle(ctx: MessageCtx): Promise<void> {
-    console.log('message');
-    if (!('text' in ctx.update.message)) {
-      await ctx.deleteMessage(ctx.message.message_id);
+  async handle(ctx: Context): Promise<void> {
+    console.log("message");
+    if (!ctx.message) return;
+    if (!ctx?.message?.text) {
+      await ctx.api.deleteMessage(ctx.message.chat.id, ctx.message.message_id);
       return;
     }
 
-    const { text } = ctx.update.message;
+    const { from, text } = ctx.message;
 
-    const activeCommand = await this.getActiveCommand(ctx.message.from.id);
+    const activeCommand = await this.getActiveCommand(from.id);
     if (activeCommand) {
       // TODO handle active command
       return;
@@ -81,7 +82,7 @@ class MessageHandler {
     const { data } = await axios
       .get<RapidApiResponse>(
         `https://wordsapiv1.p.rapidapi.com/words/${writing}`,
-        { headers: { 'X-RapidAPI-Key': appConfig.rapidApiKey } }
+        { headers: { "X-RapidAPI-Key": appConfig.rapidApiKey } }
       )
       .catch((err: Error) => {
         throw new Error(err.message || Errors.INTERNAL_SERVER_EXCEPTION);
@@ -90,7 +91,7 @@ class MessageHandler {
     return data;
   }
 
-  private async createNewWord(
+  private createNewWord(
     writing: string,
     data: RapidApiResponse
   ): Promise<IWord> {
@@ -111,7 +112,7 @@ class MessageHandler {
     });
   }
 
-  private async reply(ctx: MessageCtx, word: IWord): Promise<void> {
+  private async reply(ctx: Context, word: IWord): Promise<void> {
     await addWordReply(ctx, word);
   }
 }

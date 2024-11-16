@@ -1,7 +1,7 @@
-import { Actions } from '../lib/actions';
-import { Errors } from '../lib/errors';
-import { IWord, IWordDefinition } from '../models/word';
-import { CommandCtx, MessageCtx } from './types';
+import { Context } from "https://deno.land/x/grammy@v1.31.3/mod.ts";
+import { Actions } from "../lib/actions.ts";
+import { Errors } from "../lib/errors.ts";
+import { IWord, IWordDefinition } from "../models/word.ts";
 
 export function prepareMarkdown(word: IWord): string {
   let markdown = `*${word.writing}* \\- _${word.pronunciation}_\n\n`;
@@ -23,13 +23,13 @@ export function prepareMarkdown(word: IWord): string {
       // escape all characters except letters and numbers
       const definitionText = definition.definition.replace(
         /[^a-zA-Z0-9]/g,
-        '\\$&'
+        "\\$&"
       );
 
       markdown += `  \\> ${definitionText}\n`;
     }
 
-    markdown += '\n';
+    markdown += "\n";
   }
 
   return markdown;
@@ -53,7 +53,7 @@ export function getCommandTextOrFail(str: string, error?: string): string {
   return text;
 }
 
-export function throwError(err: Errors, errMessage = '') {
+export function throwError(err: Errors, errMessage = "") {
   throw new Error(`${err} ${errMessage}`);
 }
 
@@ -84,7 +84,7 @@ export function validateIntOrFail(str: string, error?: string): void {
 }
 
 export function validateTimeOrFail(str: string, error?: string): void {
-  const [first, last] = str.split(':');
+  const [first, last] = str.split(":");
   const hours = parseInt(first);
   const minutes = parseInt(last);
 
@@ -99,20 +99,17 @@ export function validateWordOrFail(str: string, error?: string): void {
   }
 }
 
-export async function addWordReply(
-  ctx: MessageCtx | CommandCtx,
-  word: IWord
-): Promise<void> {
-  await ctx.replyWithMarkdownV2(prepareMarkdown(word));
+export async function addWordReply(ctx: Context, word: IWord): Promise<void> {
+  await ctx.reply(prepareMarkdown(word), { parse_mode: "MarkdownV2" });
   await ctx.reply(`Do you want to save the word?`, {
     reply_markup: {
       inline_keyboard: [
         [
           {
-            text: 'Yes',
+            text: "Yes",
             callback_data: `${Actions.addWord};yes:${word.writing}`,
           },
-          { text: 'No', callback_data: `${Actions.addWord};no` },
+          { text: "No", callback_data: `${Actions.addWord};no` },
         ],
       ],
     },

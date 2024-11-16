@@ -6,6 +6,4 @@ Telegram bot that helps to remember definitions of words.
 
 ## TODO
 
-- [ ] Refactor commands
-- [ ] Fix issue with scheduler
-- [ ] Add automatic words requester to fill DB
+- [ ] Init project

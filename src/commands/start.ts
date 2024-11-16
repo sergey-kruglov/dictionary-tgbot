@@ -1,7 +1,7 @@
-import { User as TgUser } from 'telegraf/typings/core/types/typegram';
-import { CommandCtx } from '../common/types';
-import { Command } from '../interfaces/handler';
-import { User } from '../models';
+import { Context } from "https://deno.land/x/grammy@v1.31.3/mod.ts";
+import { User as TgUser } from "https://deno.land/x/grammy_types@v3.15.0/manage.ts";
+import { Command } from "../interfaces/handler.ts";
+import { User } from "../models/index.ts";
 
 /**
  * Handle /start command.
@@ -9,10 +9,11 @@ import { User } from '../models';
  * reply with Welcome message.
  */
 class StartCommand implements Command {
-  readonly name = 'start';
+  readonly name = "start";
 
-  async handle(ctx: CommandCtx): Promise<void> {
-    const { from, chat } = ctx.update.message;
+  async handle(ctx: Context): Promise<void> {
+    if (!ctx?.message) return;
+    const { from, chat } = ctx.message;
     await this.createOrUpdateUser(from, chat.id);
     await this.reply(ctx, from);
   }
@@ -36,7 +37,7 @@ class StartCommand implements Command {
     );
   }
 
-  private async reply(ctx: CommandCtx, from: TgUser): Promise<void> {
+  private async reply(ctx: Context, from: TgUser): Promise<void> {
     const name = from.first_name || from.username || from.id;
     await ctx.reply(`Welcome, ${name}. Write /help to get more info`);
   }

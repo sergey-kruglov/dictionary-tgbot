@@ -1,20 +1,18 @@
-import { Telegraf } from 'telegraf';
-
-import { cancelCommand } from '../commands/cancel';
-import { helpCommand } from '../commands/help';
-import { listTimeZonesHandler } from '../commands/list-timezones';
-import { randomWordCommand } from '../commands/random-word';
-import { removeWordCommand } from '../commands/remove-word';
-import { setIntervalCommand } from '../commands/set-interval';
-import { setReminderCommand } from '../commands/set-reminder';
-import { setTimeFrameCommand } from '../commands/set-timeframe';
-import { setTimeZoneCommand } from '../commands/set-timezone';
-import { startCommand } from '../commands/start';
-import { CommandCtx } from '../common/types';
-import { Command } from '../interfaces/handler';
-import { exceptionMiddleware } from '../middleware/exception';
-import { callbackHandler } from './callback';
-import { messageHandler } from './message';
+import { Bot } from "https://deno.land/x/grammy@v1.31.3/mod.ts";
+import { cancelCommand } from "../commands/cancel.ts";
+import { helpCommand } from "../commands/help.ts";
+import { listTimeZonesHandler } from "../commands/list-timezones.ts";
+import { randomWordCommand } from "../commands/random-word.ts";
+import { removeWordCommand } from "../commands/remove-word.ts";
+import { setIntervalCommand } from "../commands/set-interval.ts";
+import { setReminderCommand } from "../commands/set-reminder.ts";
+import { setTimeFrameCommand } from "../commands/set-timeframe.ts";
+import { setTimeZoneCommand } from "../commands/set-timezone.ts";
+import { startCommand } from "../commands/start.ts";
+import { Command } from "../interfaces/handler.ts";
+import { exceptionMiddleware } from "../middleware/exception.ts";
+import { callbackHandler } from "./callback.ts";
+import { messageHandler } from "./message.ts";
 
 // * DEFINE COMMANDS HERE *
 const commands: Command[] = [
@@ -31,15 +29,15 @@ const commands: Command[] = [
 ];
 
 // Configure middleware, commands and callbacks
-export function configureHandlers(bot: Telegraf) {
+export function configureHandlers(bot: Bot) {
   bot.use(exceptionMiddleware);
 
   // Command handlers should be defined before the message handler,
   // otherwise the message handler handles all commands
   for (const command of commands) {
-    bot.command(command.name, (ctx: CommandCtx) => command.handle(ctx));
+    bot.command(command.name, (ctx) => command.handle(ctx));
   }
 
-  bot.on('message', (ctx) => messageHandler.handle(ctx));
-  bot.on('callback_query', (ctx) => callbackHandler.handle(ctx));
+  bot.on("message", (ctx) => messageHandler.handle(ctx));
+  bot.on("callback_query", (ctx) => callbackHandler.handle(ctx));
 }

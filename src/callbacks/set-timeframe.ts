@@ -1,16 +1,17 @@
-import { CallbackCtx } from '../common/types';
-import { Callback } from '../interfaces/handler';
-import { Actions } from '../lib/actions';
+import { Context } from "https://deno.land/x/grammy@v1.31.3/mod.ts";
+import { Callback } from "../interfaces/handler.ts";
+import { Actions } from "../lib/actions.ts";
 
 class SetTimeFrameCallback implements Callback {
   readonly action = Actions.setTimeFrame;
 
-  async handle(ctx: CallbackCtx): Promise<void> {
-    if (!('data' in ctx.update.callback_query)) return;
+  handle(ctx: Context): void {
+    if (!ctx.callbackQuery) return;
+    const { data, message, from } = ctx.callbackQuery;
+    if (!data) return;
 
-    const { data, message, from } = ctx.update.callback_query;
     const messageId = message?.message_id;
-    const [, value] = data.split(';');
+    const [, value] = data.split(";");
 
     console.log({ from, messageId, value });
   }

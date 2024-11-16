@@ -1,18 +1,20 @@
-import { User as TgUser } from 'telegraf/typings/core/types/typegram';
-import { CommandCtx } from '../common/types';
-import { Command } from '../interfaces/handler';
-import { Actions } from '../lib/actions';
-import { User } from '../models';
+import { Context } from "https://deno.land/x/grammy@v1.31.3/mod.ts";
+import { User as TgUser } from "https://deno.land/x/grammy_types@v3.15.0/manage.ts";
+import { Command } from "../interfaces/handler.ts";
+import { Actions } from "../lib/actions.ts";
+import { User } from "../models/index.ts";
 
 /**
  * Handle /cancel command.
  * Cancel the current operation.
  */
 class CancelCommand implements Command {
-  readonly name = 'cancel';
+  readonly name = "cancel";
 
-  async handle(ctx: CommandCtx): Promise<void> {
-    const { from } = ctx.update.message;
+  async handle(ctx: Context): Promise<void> {
+    if (!ctx.message) return;
+
+    const { from } = ctx.message;
     const activeCommand = await this.clearActiveCommand(from);
     await this.reply(ctx, activeCommand);
   }
@@ -26,7 +28,7 @@ class CancelCommand implements Command {
   }
 
   private async reply(
-    ctx: CommandCtx,
+    ctx: Context,
     activeCommand: Actions | undefined
   ): Promise<void> {
     if (activeCommand) {

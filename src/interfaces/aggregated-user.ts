@@ -1,4 +1,4 @@
-import { IWord } from '../models/word';
+import { IWord } from "../models/word.ts";
 
 export interface AggregatedUser {
   _id: string;

@@ -1,28 +1,30 @@
-import * as momentTz from 'moment-timezone';
-import { CommandCtx } from '../common/types';
-import { getCommandTextOrFail } from '../common/utils';
-import { Command } from '../interfaces/handler';
-import { Errors } from '../lib/errors';
-import { User } from '../models';
+import { Context } from "https://deno.land/x/grammy@v1.31.3/mod.ts";
+import moment from "npm:moment-timezone@0.5.46";
+import { getCommandTextOrFail } from "../common/utils.ts";
+import { Command } from "../interfaces/handler.ts";
+import { Errors } from "../lib/errors.ts";
+import { User } from "../models/index.ts";
 
 /**
  * Handle /setTimeZone command.
  * To properly calculate from and to dates, we need to set the timezone.
  */
 class SetTimeZoneCommand implements Command {
-  readonly name = 'settimezone';
+  readonly name = "settimezone";
 
-  private readonly _usageExample = '/settimezone Europe/Helsinki';
+  private readonly _usageExample = "/settimezone Europe/Helsinki";
 
-  async handle(ctx: CommandCtx): Promise<void> {
-    if (!('text' in ctx.update.message)) {
-      await ctx.deleteMessage(ctx.message.message_id);
+  async handle(ctx: Context): Promise<void> {
+    if (!ctx.message) return;
+    const { from, text } = ctx.message;
+
+    if (!text) {
+      await ctx.deleteMessage();
       return;
     }
 
-    const { from, text } = ctx.update.message;
     const timeZone = getCommandTextOrFail(text, this._usageExample);
-    const timeZones = momentTz.tz.names();
+    const timeZones = moment.tz.names();
     if (!timeZones.includes(timeZone)) {
       await ctx.reply(Errors.INCORRECT_FORMAT);
     }
@@ -31,7 +33,7 @@ class SetTimeZoneCommand implements Command {
   }
 
   private async setUserTimeZone(
-    ctx: CommandCtx,
+    ctx: Context,
     id: number,
     timeZone: string
   ): Promise<void> {
