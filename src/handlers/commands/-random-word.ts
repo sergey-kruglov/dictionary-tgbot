@@ -5,6 +5,10 @@ import { Command } from "../interfaces/handler.ts";
 import { Word } from "../models/index.ts";
 import { IWord } from "../models/word.ts";
 
+/**
+ * This command is temporarily disabled,
+ * sine the database is not big enough at this moment
+ */
 class RandomWordCommand implements Command {
   readonly name = "randomword";
 

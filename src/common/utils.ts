@@ -2,6 +2,7 @@ import { Context } from "https://deno.land/x/grammy@v1.31.3/mod.ts";
 import { Actions } from "../lib/actions.ts";
 import { Errors } from "../lib/errors.ts";
 import { IWord, IWordDefinition } from "../models/word.ts";
+import { logger } from "./logger.ts";
 
 export function prepareMarkdown(word: IWord): string {
   let markdown = `*${word.writing}* \\- _${word.pronunciation}_\n\n`;
@@ -114,4 +115,8 @@ export async function addWordReply(ctx: Context, word: IWord): Promise<void> {
       ],
     },
   });
+}
+
+export function skip(id?: number) {
+  logger.log("skip processing", { id });
 }

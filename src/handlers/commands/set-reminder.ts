@@ -1,7 +1,7 @@
 import { Context } from "https://deno.land/x/grammy@v1.31.3/mod.ts";
-import { Command } from "../interfaces/handler.ts";
-import { Actions } from "../lib/actions.ts";
-import { User } from "../models/index.ts";
+import { Command } from "../../interfaces/handler.ts";
+import { Actions } from "../../lib/actions.ts";
+import { User } from "../../models/index.ts";
 
 /**
  * Handle /setReminder command.
@@ -9,8 +9,6 @@ import { User } from "../models/index.ts";
  */
 class SetReminderCommand implements Command {
   readonly name = "setreminder";
-
-  private readonly _usageExample = "/setreminder on/off";
 
   async handle(ctx: Context): Promise<void> {
     if (!ctx.message) return;

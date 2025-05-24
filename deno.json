@@ -1,5 +1,6 @@
 {
   "tasks": {
-    "start": "deno -IN --allow-read --allow-sys --allow-env --env-file --unstable-cron ./src/main.ts"
+    "start": "deno --allow-net --allow-import --allow-read --allow-sys --allow-env --env-file --unstable-cron ./src/main.ts",
+    "dev": "deno --allow-net --allow-import --allow-read --allow-sys --allow-env --env-file --unstable-cron --watch ./src/main.ts"
   }
 }

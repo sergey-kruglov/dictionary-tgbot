@@ -2,6 +2,7 @@
 import { Context } from "https://deno.land/x/grammy@v1.31.3/mod.ts";
 import axios from "npm:axios@1.7.7";
 import { appConfig } from "../common/config.ts";
+import { logger } from "../common/logger.ts";
 import {
   addWordReply,
   getWordOrFail,
@@ -16,7 +17,7 @@ import { IWord, IWordDefinition } from "../models/word.ts";
 
 class MessageHandler {
   async handle(ctx: Context): Promise<void> {
-    console.log("message");
+    logger.log("message");
     if (!ctx.message) return;
     if (!ctx?.message?.text) {
       await ctx.api.deleteMessage(ctx.message.chat.id, ctx.message.message_id);
@@ -42,6 +43,12 @@ class MessageHandler {
 
     await this.checkRequestCount();
     const data = await this.getWordFromApi(writing);
+    if (!data?.results) {
+      await this.reply(ctx);
+      return;
+    }
+
+    logger.log("data", data);
     const newWord = await this.createNewWord(writing, data);
     await this.reply(ctx, newWord);
   }
@@ -78,13 +85,18 @@ class MessageHandler {
     }
   }
 
-  private async getWordFromApi(writing: string): Promise<RapidApiResponse> {
+  private async getWordFromApi(
+    writing: string
+  ): Promise<RapidApiResponse | null> {
     const { data } = await axios
       .get<RapidApiResponse>(
         `https://wordsapiv1.p.rapidapi.com/words/${writing}`,
         { headers: { "X-RapidAPI-Key": appConfig.rapidApiKey } }
       )
       .catch((err: Error) => {
+        if (err.message.includes("404")) {
+          return { data: null };
+        }
         throw new Error(err.message || Errors.INTERNAL_SERVER_EXCEPTION);
       });
 
@@ -112,7 +124,11 @@ class MessageHandler {
     });
   }
 
-  private async reply(ctx: Context, word: IWord): Promise<void> {
+  private async reply(ctx: Context, word?: IWord): Promise<void> {
+    if (!word) {
+      await ctx.reply("Unknown word");
+      return;
+    }
     await addWordReply(ctx, word);
   }
 }

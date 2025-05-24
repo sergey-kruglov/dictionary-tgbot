@@ -1,7 +1,10 @@
 import { Context } from "https://deno.land/x/grammy@v1.31.3/mod.ts";
-import { getCommandWordsOrFail, validateTimeOrFail } from "../common/utils.ts";
-import { Command } from "../interfaces/handler.ts";
-import { User } from "../models/index.ts";
+import {
+  getCommandWordsOrFail,
+  validateTimeOrFail,
+} from "../../common/utils.ts";
+import { Command } from "../../interfaces/handler.ts";
+import { User } from "../../models/index.ts";
 
 /**
  * Handle /setTimeFrame command.

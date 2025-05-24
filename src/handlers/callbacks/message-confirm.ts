@@ -1,35 +1,36 @@
 import { Context } from "https://deno.land/x/grammy@v1.31.3/mod.ts";
-import { Callback } from "../interfaces/handler.ts";
-import { Actions } from "../lib/actions.ts";
-import { User, Word } from "../models/index.ts";
+import { logger } from "../../common/logger.ts";
+import { skip } from "../../common/utils.ts";
+import { Callback } from "../../interfaces/handler.ts";
+import { Actions } from "../../lib/actions.ts";
+import { User, Word } from "../../models/index.ts";
 
 /**
  * Handle "Save word?" button clicks
  */
-class MessageCallback implements Callback {
+class MessageConfirmCallback implements Callback {
   readonly action = Actions.addWord;
 
   async handle(ctx: Context): Promise<void> {
-    if (!ctx.callbackQuery) return;
+    logger.log("received message", { id: ctx.msgId });
+
+    if (!ctx.callbackQuery) return skip(ctx.msgId);
     const { data, message, from } = ctx.callbackQuery;
-    if (!data) return;
+    if (!data) return skip(ctx.msgId);
 
     const messageId = message?.message_id;
-    if (!messageId) return;
+    if (!messageId) return skip(ctx.msgId);
 
     const [action, value] = data.split(";");
-
     if (!Actions[action as Actions]) {
       await ctx.deleteMessage();
-      return;
+      return skip(ctx.msgId);
     }
 
     const [key, writing] = value.split(":");
-
-    // We don't need to keep the message
     if (!messageId || key === "no") {
       await ctx.deleteMessage();
-      return;
+      return skip(ctx.msgId);
     }
 
     // if user already saved the word, we skip wordsCount update
@@ -40,6 +41,7 @@ class MessageCallback implements Callback {
     }
 
     await ctx.deleteMessage();
+    logger.log("message processed", { id: ctx.msgId });
   }
 
   async isWordAlreadyExists(id: number, writing: string): Promise<boolean> {
@@ -68,4 +70,4 @@ class MessageCallback implements Callback {
   }
 }
 
-export const messageCallback = new MessageCallback();
+export const messageConfirmCallback = new MessageConfirmCallback();

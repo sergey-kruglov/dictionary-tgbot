@@ -1,11 +1,9 @@
 import { Context } from "https://deno.land/x/grammy@v1.31.3/mod.ts";
-import { messageCallback } from "../callbacks/message.ts";
-import { removeWordCallback } from "../callbacks/remove-word.ts";
-import { setIntervalCallback } from "../callbacks/set-interval.ts";
-import { setReminderCallback } from "../callbacks/set-reminder.ts";
-import { setTimeFrameCallback } from "../callbacks/set-timeframe.ts";
-import { setTimeZoneCallback } from "../callbacks/set-timezone.ts";
 import { Actions } from "../lib/actions.ts";
+import { messageConfirmCallback } from "./callbacks/message-confirm.ts";
+import { setIntervalCallback } from "./callbacks/set-interval.ts";
+import { setReminderCallback } from "./callbacks/set-reminder.ts";
+import { setTimeFrameCallback } from "./callbacks/set-timeframe.ts";
 
 class CallbackHandler {
   async handle(ctx: Context) {
@@ -27,10 +25,7 @@ class CallbackHandler {
 
     switch (action) {
       case Actions.addWord:
-        await messageCallback.handle(ctx);
-        break;
-      case Actions.removeWord:
-        await removeWordCallback.handle(ctx);
+        await messageConfirmCallback.handle(ctx);
         break;
       case Actions.setInterval:
         await setIntervalCallback.handle(ctx);
@@ -40,9 +35,6 @@ class CallbackHandler {
         break;
       case Actions.setTimeFrame:
         await setTimeFrameCallback.handle(ctx);
-        break;
-      case Actions.setTimeZone:
-        await setTimeZoneCallback.handle(ctx);
         break;
     }
   }

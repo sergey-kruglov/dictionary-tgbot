@@ -8,5 +8,4 @@ export interface AggregatedUser {
   reminderIntervalMinutes: number;
   reminderStartTime: string;
   reminderEndTime: string;
-  timeZone: string;
 }

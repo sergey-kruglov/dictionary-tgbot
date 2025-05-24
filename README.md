@@ -1,9 +1,14 @@
 # dictionary-tgbot
 
-**[@sk_dictionary_bot](https://t.me/sk_dictionary_bot)**
+**[@AnotherVocabularyBot](https://t.me/AnotherVocabularyBot)**
 
-Telegram bot that helps to remember definitions of words.
+Telegram bot that helps to remember word definitions
 
-## TODO
+## Telegram commands
 
-- [ ] Init project
+/start - Start using the bot
+/help - Show how to use the bot
+/cancel - Stop the current action
+/setreminder - Turn word reminders on/off (default: on)
+/settimeframe - Set daily time window for reminders (default: 07:00-18:00 UTC)
+/setinterval - Set interval between word reminders in minutes (default: 120)
