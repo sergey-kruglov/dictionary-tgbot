@@ -8,15 +8,19 @@ const EveryMinute = "* * * * *";
 function addCronJob(
   name: string,
   schedule: string | Deno.CronSchedule,
-  jobPromise: Promise<void>
+  callback: () => Promise<void>
 ) {
   Deno.cron(name, schedule, () => {
-    jobPromise.catch((err: Error) => {
+    callback().catch((err: Error) => {
       logger.error(`cron error: ${name}`, { error: err });
     });
   });
 }
 
 export function initScheduler(bot: Bot) {
-  addCronJob("send reminders", EveryMinute, SendRemindersJob.execute(bot));
+  addCronJob(
+    "send reminders",
+    EveryMinute,
+    (): Promise<void> => SendRemindersJob.execute(bot)
+  );
 }

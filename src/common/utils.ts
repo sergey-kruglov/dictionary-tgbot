@@ -100,17 +100,39 @@ export function validateWordOrFail(str: string, error?: string): void {
   }
 }
 
-export async function addWordReply(ctx: Context, word: IWord): Promise<void> {
+export async function addWordReply(
+  ctx: Context,
+  word: IWord,
+  exists: boolean
+): Promise<void> {
   await ctx.reply(prepareMarkdown(word), { parse_mode: "MarkdownV2" });
+
+  if (exists) {
+    await ctx.reply(`Do you want to remove the word?`, {
+      reply_markup: {
+        inline_keyboard: [
+          [
+            { text: "Keep", callback_data: `${Actions.removeWord};no` },
+            {
+              text: "Remove",
+              callback_data: `${Actions.removeWord};yes:${word.writing}`,
+            },
+          ],
+        ],
+      },
+    });
+    return;
+  }
+
   await ctx.reply(`Do you want to save the word?`, {
     reply_markup: {
       inline_keyboard: [
         [
+          { text: "Skip", callback_data: `${Actions.addWord};no` },
           {
-            text: "Yes",
+            text: "Save",
             callback_data: `${Actions.addWord};yes:${word.writing}`,
           },
-          { text: "No", callback_data: `${Actions.addWord};no` },
         ],
       ],
     },

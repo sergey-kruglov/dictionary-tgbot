@@ -37,7 +37,17 @@ class MessageHandler {
 
     const word = await this.findWordInDB(writing);
     if (word) {
-      await this.reply(ctx, word);
+      const userWordExists = await User.findOne({
+        id: from.id,
+        words: word.writing,
+      }).select("id");
+
+      if (userWordExists) {
+        await this.reply(ctx, word, true);
+      } else {
+        await this.reply(ctx, word);
+      }
+
       return;
     }
 
@@ -62,7 +72,7 @@ class MessageHandler {
     const word = await Word.findOneAndUpdate(
       { writing },
       { $inc: { requestedCount: 1 } }
-    );
+    ).exec();
 
     return word;
   }
@@ -124,12 +134,21 @@ class MessageHandler {
     });
   }
 
-  private async reply(ctx: Context, word?: IWord): Promise<void> {
+  private async reply(
+    ctx: Context,
+    word?: IWord,
+    exists?: boolean
+  ): Promise<void> {
     if (!word) {
       await ctx.reply("Unknown word");
       return;
     }
-    await addWordReply(ctx, word);
+
+    if (exists) {
+      await addWordReply(ctx, word, true);
+    } else {
+      await addWordReply(ctx, word, false);
+    }
   }
 }
 

@@ -25,6 +25,7 @@ class CallbackHandler {
 
     switch (action) {
       case Actions.addWord:
+      case Actions.removeWord:
         await messageConfirmCallback.handle(ctx);
         break;
       case Actions.setInterval:

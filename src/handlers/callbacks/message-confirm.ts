@@ -9,10 +9,12 @@ import { User, Word } from "../../models/index.ts";
  * Handle "Save word?" button clicks
  */
 class MessageConfirmCallback implements Callback {
-  readonly action = Actions.addWord;
-
   async handle(ctx: Context): Promise<void> {
-    logger.log("received message", { id: ctx.msgId });
+    logger.log("message confirm", {
+      id: ctx.msgId,
+      user: ctx.callbackQuery?.from.id,
+      data: ctx.callbackQuery?.data,
+    });
 
     if (!ctx.callbackQuery) return skip(ctx.msgId);
     const { data, message, from } = ctx.callbackQuery;
@@ -22,7 +24,7 @@ class MessageConfirmCallback implements Callback {
     if (!messageId) return skip(ctx.msgId);
 
     const [action, value] = data.split(";");
-    if (!Actions[action as Actions]) {
+    if (action !== Actions.addWord && action !== Actions.removeWord) {
       await ctx.deleteMessage();
       return skip(ctx.msgId);
     }
@@ -33,11 +35,11 @@ class MessageConfirmCallback implements Callback {
       return skip(ctx.msgId);
     }
 
-    // if user already saved the word, we skip wordsCount update
     const exists = await this.isWordAlreadyExists(from.id, writing);
-    if (!exists) {
-      // Add the word to the user and increment words counter
-      await this.updateUserWords(from.id, writing);
+    if (action === Actions.addWord) {
+      if (!exists) await this.addUserWord(from.id, writing);
+    } else {
+      if (exists) await this.removeUserWord(from.id, writing);
     }
 
     await ctx.deleteMessage();
@@ -54,19 +56,41 @@ class MessageConfirmCallback implements Callback {
     return !!user;
   }
 
-  async updateUserWords(id: number, writing: string): Promise<void> {
+  async addUserWord(id: number, writing: string): Promise<void> {
     const { matchedCount } = await User.updateOne(
       {
         id: id,
-        writing: { $nin: [writing] },
+        words: { $nin: [writing] },
       },
       { $addToSet: { words: writing }, $inc: { wordsCount: 1 } }
     );
 
-    // Update statistics of words usage
+    console.log(matchedCount);
+
     if (matchedCount) {
-      await Word.updateOne({ writing }, { $inc: { savedCount: 1 } });
+      await this.updateWordStatistics(writing, true);
     }
+  }
+
+  async removeUserWord(id: number, writing: string): Promise<void> {
+    const { matchedCount } = await User.updateOne(
+      {
+        id: id,
+        words: writing,
+      },
+      { $pull: { words: writing }, $inc: { wordsCount: -1 } }
+    );
+
+    if (matchedCount) {
+      await this.updateWordStatistics(writing, false);
+    }
+  }
+
+  async updateWordStatistics(writing: string, increase: boolean) {
+    await Word.updateOne(
+      { writing },
+      { $inc: { savedCount: increase ? 1 : -1 } }
+    );
   }
 }
 
